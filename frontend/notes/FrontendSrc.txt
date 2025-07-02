@@ -1,0 +1,61 @@
+src/
+├── assets/                      # Berisi aset statis: gambar, ikon, logo, dll
+│
+├── components/                  # Komponen UI yang dapat digunakan ulang
+│   ├── Navbar.jsx
+│   ├── Footer.jsx
+│   ├── Button.jsx
+│   ├── Modal.jsx
+│   └── ...                      # Tambahan komponen lainnya
+│
+├── pages/                       # Halaman publik aplikasi (routing utama)
+│   ├── Home.jsx
+│   ├── About.jsx
+│   ├── Store.jsx
+│   ├── ProductDetail.jsx
+│   ├── Cart.jsx
+│   ├── Checkout.jsx
+│   ├── Login.jsx
+│   ├── Register.jsx
+│   └── NotFound.jsx
+│
+├── dashboards/                  # Halaman dashboard berdasarkan role
+│   ├── admin/                   # Halaman khusus Admin
+│   │   ├── AdminDashboard.jsx
+│   │   ├── ManageUsers.jsx
+│   │   ├── ManageProducts.jsx
+│   │   └── TransactionReports.jsx
+│   │
+│   ├── seller/                  # Halaman khusus Penjual
+│   │   ├── SellerDashboard.jsx
+│   │   ├── ManageSales.jsx
+│   │   ├── ManageProducts.jsx
+│   │   └── BuyerData.jsx
+│   │
+│   └── customer/                # Halaman khusus Customer
+│       ├── CustomerDashboard.jsx
+│       ├── Orders.jsx
+│       ├── Profile.jsx
+│       ├── Payments.jsx
+│
+├── layouts/                     # Struktur layout global
+│   ├── MainLayout.jsx           # Layout umum (homepage, store, dll)
+│   └── DashboardLayout.jsx      # Layout khusus dashboard
+│
+├── routes/                      # Routing utama aplikasi
+│   └── AppRoutes.jsx
+│
+├── services/                    # File komunikasi API (axios/fetch)
+│   ├── authService.js
+│   ├── productService.js
+│   ├── orderService.js
+│   └── userService.js
+│
+├── contexts/                    # Global state management (Context API)
+│   └── AuthContext.jsx
+│
+├── hooks/                       # Custom React hooks (useAuth, useCart, dll)
+│   └── useExampleHook.js
+│
+├── App.jsx                      # Root component utama
+└── main.jsx                     # Entry point React (render ke DOM)

@@ -1,0 +1,34 @@
+backend/
+│
+├── controllers/           # Logic untuk setiap resource (user, product, order, dll)
+│   ├── authController.js
+│   ├── productController.js
+│   ├── orderController.js
+│   ├── userController.js
+│   └── reportController.js
+│
+├── models/                # Model database (ORM/Query builder)
+│   ├── User.js
+│   ├── Product.js
+│   ├── Order.js
+│   ├── Payment.js
+│   └── Report.js
+│
+├── routes/                # Routing API
+│   ├── authRoutes.js
+│   ├── productRoutes.js
+│   ├── orderRoutes.js
+│   ├── userRoutes.js
+│   └── reportRoutes.js
+│
+├── middlewares/           # Middleware (auth, error handler, dll)
+│   ├── authMiddleware.js
+│   └── errorHandler.js
+│
+├── config/                # Konfigurasi (db, env, dll)
+│   └── db.js
+│
+├── utils/                 # Helper function
+│
+├── app.js                 # Entry point Express
+└── server.js              # Start server
