@@ -1,0 +1,11 @@
+//test create user
+POST http://localhost:3000/customers
+Content-Type: application/json
+{
+	"username": "feb",
+    "email" : "example@gmail.com",
+    "password": "rahasia123",
+    "confirmpassword": "rahasia123"
+}
+
+###
