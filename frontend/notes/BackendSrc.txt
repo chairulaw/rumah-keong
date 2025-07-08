@@ -1,34 +1,28 @@
-backend/
+src/
+├── config/
+│   └── db.js                # MySQL connection setup
 │
-├── controllers/           # Logic untuk setiap resource (user, product, order, dll)
+├── controllers/
 │   ├── authController.js
-│   ├── productController.js
-│   ├── orderController.js
 │   ├── userController.js
-│   └── reportController.js
+│   ├── tokoController.js
+│   ├── produkController.js
+│   ├── transaksiController.js
+│   └── detailController.js
 │
-├── models/                # Model database (ORM/Query builder)
-│   ├── User.js
-│   ├── Product.js
-│   ├── Order.js
-│   ├── Payment.js
-│   └── Report.js
+├── middlewares/
+│   ├── authMiddleware.js   # JWT verification
+│   └── roleMiddleware.js   # Role-based access control
 │
-├── routes/                # Routing API
+├── routes/
 │   ├── authRoutes.js
-│   ├── productRoutes.js
-│   ├── orderRoutes.js
 │   ├── userRoutes.js
-│   └── reportRoutes.js
+│   ├── tokoRoutes.js
+│   ├── produkRoutes.js
+│   ├── transaksiRoutes.js
+│   └── detailRoutes.js
 │
-├── middlewares/           # Middleware (auth, error handler, dll)
-│   ├── authMiddleware.js
-│   └── errorHandler.js
+├── utils/
+│   └── generateToken.js    # JWT generator
 │
-├── config/                # Konfigurasi (db, env, dll)
-│   └── db.js
-│
-├── utils/                 # Helper function
-│
-├── app.js                 # Entry point Express
-└── server.js              # Start server
+└── index.js                # Main entry point

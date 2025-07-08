@@ -14,6 +14,9 @@ import Store from "./pages/Store";
 import CustomerDashboard from "./pages/dashboards/customer/CustomerDashboard";
 import CustomerAddress from "./pages/dashboards/customer/CustomerAddress";
 
+//DASHBOARD
+import AdminDashboard from "./pages/dashboards/admin/AdminDashboard";
+
 function AppContent() {
   const location = useLocation();
   const isHomepage = location.pathname === "/";

@@ -1,11 +1,22 @@
 //test create user
 POST http://localhost:3000/customers
 Content-Type: application/json
+
 {
-	"username": "feb",
+    "username": "feb",
     "email" : "example@gmail.com",
     "password": "rahasia123",
     "confirmpassword": "rahasia123"
 }
 
 ###
+PUT http://localhost:3000/customers/1
+Content-Type: application/json
+
+{
+    "idcustomer": 1,
+    "username": "jill",
+    "email": "jill@gmail.com",
+    "password": "5678jill",
+    "confirmpassword": "5678jill"
+}
