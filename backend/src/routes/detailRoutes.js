@@ -1,12 +1,12 @@
 import express from "express";
 import {protect} from "../middlewares/authMiddleware.js";
-import { authorizeRoles } from "../middlewares/roleMiddleware.js";
+import { authorizeRoles } from "../middlewares/roleMiddlewares.js";
 
 import {
     createDetail,
     updateDetail,
     deleteDetail,
-} from "../controller/detailController.js";
+} from "../controllers/detailController.js";
 
 const router = express.Router();
 

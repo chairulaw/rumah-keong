@@ -1,22 +1,32 @@
-//test create user
-POST http://localhost:3000/customers
+//register pembeli
+POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "username": "feb",
-    "email" : "example@gmail.com",
-    "password": "rahasia123",
-    "confirmpassword": "rahasia123"
+  "email": "userbaru@gmail.com",
+  "password": "rahasia123",
+  "nama": "User Baru",
+  "role": "Pembeli"
 }
 
 ###
-PUT http://localhost:3000/customers/1
+//register penjual
+POST http://localhost:3000/api/auth/register
 Content-Type: application/json
 
 {
-    "idcustomer": 1,
-    "username": "jill",
-    "email": "jill@gmail.com",
-    "password": "5678jill",
-    "confirmpassword": "5678jill"
+  "email": "admin@gmail.com",
+  "password": "rahasia123",
+  "nama": "Admin",
+  "role": "Admin"
+}
+
+###
+//login
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "rahasia123"
 }
