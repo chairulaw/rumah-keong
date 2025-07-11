@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import db from "../config/database.js";
 import generateToken from "../utils/generateToken.js";
+import multer from "multer";
+import path from "path";
 
 export const register = async (req, res) => {
   const { email, password, nama, role } = req.body;
@@ -35,7 +37,6 @@ export const login = async (req, res) => {
     token: generateToken(user),
   });
 };
-
 
 export const addProfileImage = async (req, res) => {
   try {
@@ -77,3 +78,74 @@ export const addProfileImage = async (req, res) => {
   }
 };
 
+export const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  }
+})
+
+export const upload = multer({ storage });
+
+export const updateName = async (req, res) => {
+  const {name} = req.body;
+  const {id} = req.user.id;
+
+  if(!name || !id) {
+    return res.status(400).json({ message: "Name and user ID are required" });
+  }
+  
+  try {
+    
+    const result = await db.query("UPDATE users SET nama = ? WHERE id = ?", [name, id]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ message: "Name updated successfully" });
+  } catch (error) {
+    console.error("Error updating name:", error);
+    res.status(500).json({ message: "Error updating name", error: error.message });
+  }
+ }
+
+export const updatePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;  
+    const { id } = req.user;  
+
+    if (!currentPassword || !newPassword || !id) {
+        return res.status(400).json({ message: 'Current password, new password, or userId is missing' });
+    }
+
+    try {
+      const userResult = await query('SELECT * FROM users WHERE id = ?', [id]);
+      console.log('Update result:', userResult);
+
+        if (userResult.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const user = userResult[0];  
+
+     
+        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
+        if (!isPasswordValid) {
+            return res.status(400).json({ message: 'Current password is incorrect' });
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const result = await query('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, id]);
+        console.log('Update result:', result);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Failed to update password' });
+        }
+
+        res.status(200).json({ message: 'Password updated successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Failed to update password', error: err.message });
+    }
+};
