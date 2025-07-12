@@ -4,19 +4,23 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 // COMPONENTS
 import Header from "./components/Header";
 import SidebarCustomer from "./components/SidebarCustomer";
+import SidebarAdmin from "./components/SidebarAdmin";
 
 // PAGES
 import Homepage from "./pages/Homepage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Checkout from "./pages/Checkout";
-import Store from "./pages/Store";
 import CustomerDashboard from "./pages/dashboards/customer/CustomerDashboard";
 import CustomerAddress from "./pages/dashboards/customer/CustomerAddress";
 import ProductDetail from "./pages/ProductDetail";
+import Store from "./pages/store/StorePages";
+import DetailStore from "./pages/store/DetailStore";
 
 //DASHBOARD
 import AdminDashboard from "./pages/dashboards/admin/AdminDashboard";
+import ManageUsers from "./pages/dashboards/admin/ManageUsers";
+import ManageTransactions from "./pages/dashboards/admin/ManageTransactions";
 
 function AppContent() {
   const location = useLocation();
@@ -24,10 +28,21 @@ function AppContent() {
   const isCustomerPath = location.pathname.startsWith("/customer");
   const isAdminPath = location.pathname.startsWith("/admin");
 
+  const hideHeaderPaths = [
+  "/login",
+  "/register",
+  "/admin/admin-dashboard",
+  "/admin/manage-users",
+  "/admin/manage-transactions"
+];
+
+
   return (
     <div className="flex flex-col min-h-screen bg-[#f9f6f1] text-[#1c1c1c] scroll-smooth">
       {/* Header */}
-      <Header />
+      {/* Tampilkan header jika tidak di path tertentu */}
+{!hideHeaderPaths.includes(location.pathname) && <Header />}
+
 
       <div
         className={`flex-1 w-full h-screen overflow-hidden ${
@@ -46,10 +61,17 @@ function AppContent() {
             </div>
           </div>
         ) : isAdminPath ? (
+          <div className="flex h-full">
+            <SidebarAdmin />
+            <div className="flex-1">
           <Routes>
-            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="admin/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="admin/manage-users" element={<ManageUsers />} />
+            <Route path="admin/manage-transactions" element={<ManageTransactions />} />
             {/* Tambahkan route admin lain di sini */}
           </Routes>
+            </div>
+          </div>
         ) : (
           <Routes>
             <Route path="/" element={<Homepage />} />
@@ -57,6 +79,7 @@ function AppContent() {
             <Route path="/register" element={<Register />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/store" element={<Store />} />
+            <Route path="/store/detail-store" element={<DetailStore />} />
             <Route path="/product" element={<ProductDetail />} />
             {/* Route customer tidak di sini */}
           </Routes>
