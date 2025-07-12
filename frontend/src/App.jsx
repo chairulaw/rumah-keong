@@ -13,6 +13,7 @@ import Checkout from "./pages/Checkout";
 import Store from "./pages/Store";
 import CustomerDashboard from "./pages/dashboards/customer/CustomerDashboard";
 import CustomerAddress from "./pages/dashboards/customer/CustomerAddress";
+import ProductDetail from "./pages/ProductDetail";
 
 //DASHBOARD
 import AdminDashboard from "./pages/dashboards/admin/AdminDashboard";
@@ -21,6 +22,7 @@ function AppContent() {
   const location = useLocation();
   const isHomepage = location.pathname === "/";
   const isCustomerPath = location.pathname.startsWith("/customer");
+  const isAdminPath = location.pathname.startsWith("/admin");
 
   return (
     <div className="flex flex-col min-h-screen bg-[#f9f6f1] text-[#1c1c1c] scroll-smooth">
@@ -29,7 +31,7 @@ function AppContent() {
 
       <div
         className={`flex-1 w-full h-screen overflow-hidden ${
-          isHomepage ? "" : "pt-40"
+          isHomepage ? "" : "pt-30"
         }`}
       >
         {isCustomerPath ? (
@@ -43,6 +45,11 @@ function AppContent() {
               </Routes>
             </div>
           </div>
+        ) : isAdminPath ? (
+          <Routes>
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            {/* Tambahkan route admin lain di sini */}
+          </Routes>
         ) : (
           <Routes>
             <Route path="/" element={<Homepage />} />
@@ -50,6 +57,7 @@ function AppContent() {
             <Route path="/register" element={<Register />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/store" element={<Store />} />
+            <Route path="/product" element={<ProductDetail />} />
             {/* Route customer tidak di sini */}
           </Routes>
         )}

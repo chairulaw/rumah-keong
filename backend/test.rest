@@ -27,6 +27,16 @@ POST http://localhost:3000/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "admin@gmail.com",
+  "email": "penjual@gmail.com",
   "password": "rahasia123"
 }
+
+###
+//get user profile by ID
+GET http://localhost:3000/api/user/profile/3
+Content-Type: application/json
+
+###
+//get all users
+GET http://localhost:3000/api/user
+Content-Type: application/json
