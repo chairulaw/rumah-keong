@@ -9,7 +9,7 @@ import {
   useVelocity,
   useAnimationFrame,
 } from "framer-motion";
-import { logoKeong } from "../assets/assets";
+import { logoKeong } from "../assets/Assets";
 
 function useElementWidth(ref) {
   const [width, setWidth] = useState(0);

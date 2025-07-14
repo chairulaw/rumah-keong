@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { heroImg, aboutImg, highlightImg } from "../assets/assets";
+import { heroImg, aboutImg, highlightImg } from "../assets/Assets";
 import FadeContent from "../hooks/FadeContent";
 import ScrollVelocity from "../hooks/ScrollVelocity";
 

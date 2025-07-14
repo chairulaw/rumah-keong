@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
-import { logoKeong } from "../assets/assets";
+import { logoKeong } from "../assets/Assets";
 import { FaInstagram } from "react-icons/fa6";
 
 const Header = () => {

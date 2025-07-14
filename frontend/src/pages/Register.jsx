@@ -1,5 +1,5 @@
 import React from "react";
-import { heroImg } from "../assets/assets";
+import { heroImg } from "../assets/Assets";
 
 const Register = () => {
   return (
