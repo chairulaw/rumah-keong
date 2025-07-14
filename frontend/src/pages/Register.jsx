@@ -19,18 +19,13 @@ const Register = () => {
         </h2>
         <form className="space-y-4">
           {/* First Name + Last Name */}
-          <div className="flex gap-4">
+          
             <input
               type="text"
-              placeholder="First Name"
-              className="w-1/2 border-b border-gray-300 focus:outline-none focus:border-black py-2"
+              placeholder="Username"
+              className="w-full border-b border-gray-300 focus:outline-none focus:border-black py-2"
             />
-            <input
-              type="text"
-              placeholder="Last Name"
-              className="w-1/2 border-b border-gray-300 focus:outline-none focus:border-black py-2"
-            />
-          </div>
+          
 
           <input
             type="email"
@@ -50,11 +45,12 @@ const Register = () => {
             className="w-full border-b border-gray-300 focus:outline-none focus:border-black py-2"
           />
 
-          <select className="w-full border-b border-gray-300 focus:outline-none focus:border-black py-2">
-            <option value="">Sign Up as</option>
-            <option value="option1">Customer</option>
-            <option value="option3">Seller</option>
-          </select>
+<select className="w-full border-b border-gray-300 focus:outline-none focus:border-black py-2">
+  <option value="" disabled selected>Daftar Sebagai</option>
+  <option value="admin">Admin</option>
+  <option value="customer">Customer</option>
+  <option value="seller">Penjual</option>
+</select>
 
           <button
             type="submit"

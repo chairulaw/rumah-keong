@@ -4,7 +4,7 @@ export const getUserProfileById = async (req, res) => {
     const {id: userId} = req.params;
     
     try {
-        const userQuery = "SELECT id, nama, email FROM users WHERE id = ?";
+        const userQuery = "SELECT id, nama, email, role, alamat, no_hp FROM users WHERE id = ?";
         const [rows] = await db.query(userQuery, [userId]);
         if (!rows.length) {
             return res.status(404).json({ message: "User not found" });

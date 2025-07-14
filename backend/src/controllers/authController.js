@@ -112,6 +112,54 @@ export const updateName = async (req, res) => {
   }
 }
 
+export const updateAlamat = async (req, res) => {
+  if(!req.user || !req.user.id) {
+    return res.status(401).json({ message: "Unauthorized: user not found" });
+  }
+
+  const { alamat } = req.body;
+  const id = req.user.id;
+
+  if (!alamat) {
+    return res.status(400).json({ message: "Alamat is required" });
+  }
+
+  try {
+    const [result] = await db.query("UPDATE users SET alamat = ? WHERE id = ?", [alamat , id]);
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.status(200).json({ message: "Alamat updated successfully" });
+  } catch (error) {
+    console.error("Error updating alamat:", error);
+    return res.status(500).json({ message: "Error updating alamat", error: error.message });
+  }
+}
+
+export const updateNoHp = async (req, res) => {
+  if(!req.user || !req.user.id) {
+    return res.status(401).json({ message: "Unauthorized: user not found" });
+  }
+
+  const { no_hp } = req.body;
+  const id = req.user.id;
+
+  if(!no_hp) {
+    return res.status(400).json({message: "No HP is required"});
+  } 
+
+  try {
+    const [result] = await db.query("UPDATE users SET no_hp = ? WHERE id = ?", [no_hp, id]);
+    if(result.affectedRows === 0) {
+      return res.status(404).json({message: "User not found"})
+    }
+
+    return res.status(200).json({message: "No HP updated successfully"})
+  } catch (error) {
+    return res.status(500).json({message: "Error updating No HP", error: error.message});
+  }
+}
+
 export const updatePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;  
     const { id } = req.user;  

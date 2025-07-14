@@ -8,6 +8,7 @@ import SidebarAdmin from "./components/SidebarAdmin";
 
 // PAGES
 import Homepage from "./pages/Homepage";
+import About from "./pages/About";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Cart from "./pages/Cart";
@@ -46,8 +47,8 @@ function AppContent() {
 
 
       <div
-        className={`flex-1 w-full h-screen overflow-hidden ${
-          isHomepage ? "" : "pt-16"
+        className={`flex-1 w-full min-h-screen overflow-hidden ${
+          isHomepage ? "" : "pt-20"
         }`}
       >
         {isCustomerPath ? (
@@ -76,6 +77,7 @@ function AppContent() {
         ) : (
           <Routes>
             <Route path="/" element={<Homepage />} />
+            <Route path="/about" element={<About />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/checkout" element={<Checkout />} />

@@ -1,5 +1,5 @@
-import { useRef, useLayoutEffect, useState } from "react";
 import React from "react";
+import { useRef, useLayoutEffect, useState } from "react";
 import {
   motion,
   useScroll,
@@ -35,7 +35,7 @@ export const ScrollVelocity = ({
   className = "",
   damping = 50,
   stiffness = 400,
-  numCopies = 6,
+  numCopies = 12,
   velocityMapping = { input: [0, 1000], output: [0, 5] },
   parallaxClassName,
   scrollerClassName,
@@ -84,7 +84,7 @@ export const ScrollVelocity = ({
 
     const x = useTransform(baseX, (v) => {
       if (copyWidth === 0) return "0px";
-      return `${wrap(-copyWidth, 0, v)}px`;
+      return `${wrap(-copyWidth * numCopies, 0, v)}px`;
     });
 
     const directionFactor = useRef(1);
