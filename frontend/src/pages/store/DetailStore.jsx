@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { heroImg } from "../../assets/assets";
 
 // Dummy data toko
@@ -26,25 +26,28 @@ const products = [
     id: 101,
     storeId: 1,
     name: "Cascading Hawthorn Bonsai",
-    price: "SGD 108.00",
+    price: "IDR 1,500,000",
     image: heroImg,
     soldOut: false,
+    path: "/detail-product/101",
   },
   {
     id: 102,
     storeId: 1,
     name: "Mini Maple Bonsai",
-    price: "SGD 98.00",
+    price: "IDR 1,500,000",
     image: heroImg,
     soldOut: true,
+    path: "/detail-product/101",
   },
   {
     id: 103,
     storeId: 2,
     name: "Pohon Pisang Hias",
-    price: "SGD 58.00",
+    price: "IDR 1,500,000",
     image: heroImg,
     soldOut: false,
+    path: "/detail-product/101",
   },
 ];
 
@@ -90,9 +93,10 @@ const DetailStore = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {storeProducts.length > 0 ? (
             storeProducts.map((product) => (
-              <div
+              <Link
+              to={`/detail-product/${product.id}`}
                 key={product.id}
-                className="bg-white rounded-xl shadow p-5 flex flex-col items-center relative group"
+                className="bg-white rounded-xl shadow p-5 flex flex-col items-center relative group hover:shadow-lg hover:bg-gray-50 transition-shadow duration-200"
               >
                 {product.soldOut && (
                   <div className="absolute top-4 right-4 bg-black text-white text-xs font-bold px-3 py-1 rounded-sm z-10">
@@ -118,7 +122,7 @@ const DetailStore = () => {
                 >
                   {product.soldOut ? "Sold Out" : "Add to Cart"}
                 </button>
-              </div>
+              </Link>
             ))
           ) : (
             <p className="text-center text-gray-500 col-span-3">Belum ada produk di toko ini.</p>

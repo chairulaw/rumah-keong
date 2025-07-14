@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { heroImg, aboutImg, highlightImg } from "../assets/Assets";
+import { heroImg, aboutImg, highlightImg } from "../assets/assets";
 import FadeContent from "../hooks/FadeContent";
 import ScrollVelocity from "../hooks/ScrollVelocity";
 
@@ -8,19 +8,19 @@ const Homepage = () => {
   const products = [
     {
       name: "Cascading Hawthorn Bonsai (Japan)",
-      price: "from SGD 108.00",
+      price: "from IDR 1,500,000",
       image: heroImg, // tanpa kurung kurawal
       soldOut: true,
     },
     {
       name: "Bending Manuka Myrtle (Japan)",
-      price: "from SGD 108.00",
+      price: "from IDR 1,500,000",
       image: heroImg,
       soldOut: true,
     },
     {
       name: "Isozansho Bonsai",
-      price: "from SGD 158.00",
+      price: "from IDR 1,500,000",
       image: heroImg,
       soldOut: true,
     },
@@ -72,9 +72,9 @@ const Homepage = () => {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 ">
             {products.map((product, index) => (
-              <div key={index} className="text-center relative group">
+              <div key={index} className="text-center rounded-4xl relative group cursor-pointer">
                 <img
                   src={product.image}
                   alt={product.name}

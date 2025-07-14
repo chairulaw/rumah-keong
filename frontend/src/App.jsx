@@ -5,30 +5,39 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import SidebarCustomer from "./components/SidebarCustomer";
 import SidebarAdmin from "./components/SidebarAdmin";
+import SidebarSeller from "./components/SidebarSeller";
 
 // PAGES
 import Homepage from "./pages/Homepage";
 import About from "./pages/About";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import CustomerDashboard from "./pages/dashboards/customer/CustomerDashboard";
 import CustomerAddress from "./pages/dashboards/customer/CustomerAddress";
-import ProductDetail from "./pages/ProductDetail";
+import ProductDetail from "./pages/store/ProductDetail";
 import StorePages from "./pages/store/StorePages";
 import DetailStore from "./pages/store/DetailStore";
 
-//DASHBOARD
+//DASHBOARD USERS
 import AdminDashboard from "./pages/dashboards/admin/AdminDashboard";
 import ManageUsers from "./pages/dashboards/admin/ManageUsers";
 import ManageTransactions from "./pages/dashboards/admin/ManageTransactions";
+
+
+//DASHBOARD SELLER
+import SellerDashboard from "./pages/dashboards/seller/SellerDashboard";
+import SellerProfile from "./pages/dashboards/seller/SellerProfile";
+import ManageProducts from "./pages/dashboards/seller/ManageProducts";
+import BuyerData from "./pages/dashboards/seller/BuyerData";
+import ManageSales from "./pages/dashboards/seller/ManageSales";
 
 function AppContent() {
   const location = useLocation();
   const isHomepage = location.pathname === "/";
   const isCustomerPath = location.pathname.startsWith("/customer");
   const isAdminPath = location.pathname.startsWith("/admin");
+  const isSellerPath = location.pathname.startsWith("/seller");
 
   const hideHeaderPaths = [
   "/login",
@@ -74,6 +83,20 @@ function AppContent() {
           </Routes>
             </div>
           </div>
+        ) : isSellerPath ? (
+          <div className="flex h-full">
+            <SidebarSeller />
+            <div className="flex-1">
+              <Routes>
+                <Route path="seller/seller-dashboard" element={<SellerDashboard />} />
+                <Route path="seller/seller-profile" element={<SellerProfile />} />
+                <Route path="seller/manage-products" element={<ManageProducts />} />
+                <Route path="seller/buyer-data" element={<BuyerData />} />
+                <Route path="seller/manage-sales" element={<ManageSales />} />
+                {/* Tambahkan route seller lain di sini */}
+              </Routes>
+            </div>
+          </div>
         ) : (
           <Routes>
             <Route path="/" element={<Homepage />} />
@@ -83,8 +106,7 @@ function AppContent() {
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/store-pages" element={<StorePages />} />
             <Route path="/store/detail-store/:id" element={<DetailStore />} />
-            <Route path="/product" element={<ProductDetail />} />
-            <Route path="/cart" element={<Cart />} />
+            <Route path="/detail-product/:id" element={<ProductDetail />} />
             {/* Route customer tidak di sini */}
           </Routes>
         )}

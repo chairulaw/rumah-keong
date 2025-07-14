@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { aboutImg } from "../assets/Assets";
+import { aboutImg, aboutImg2 } from "../assets/assets";
 import FadeContent from "../hooks/FadeContent";
 
 const About = () => {
@@ -39,7 +39,7 @@ const About = () => {
                 innovations.
               </p>
               <Link
-                to="/store"
+                to="/store-pages"
                 className="inline-block px-6 py-2 border border-black text-black rounded-full text-sm hover:bg-black hover:text-white transition-colors duration-200 mt-6"
               >
                 Shop Now
@@ -55,9 +55,6 @@ const About = () => {
           <div className="flex flex-col md:flex-row gap-10">
             {/* Teks di kiri */}
             <div className="w-full md:w-1/2 flex flex-col justify-center items-baseline">
-              <h2 className="mb-4 text-3xl md:text-4xl font-semibold text-[#1c1c1c]">
-                About Us
-              </h2>
               <p className="text-lg text-gray-600">
                 Welcome to our online store! We are a passionate team dedicated
                 to providing you with a delightful shopping experience. Our
@@ -76,18 +73,18 @@ const About = () => {
                 innovations.
               </p>
               <Link
-                to="/store"
+                to="/store-pages"
                 className="inline-block px-6 py-2 border border-black text-black rounded-full text-sm hover:bg-black hover:text-white transition-colors duration-200 mt-6"
               >
                 Shop Now
               </Link>
             </div>
             {/* Gambar di kanan */}
-            <div className="w-full md:w-1/2">
+            <div className="w-full md:w-1/3 ml-50">
               <img
-                src={aboutImg}
+                src={aboutImg2}
                 alt="About Us"
-                className="w-full max-h-xl object-cover rounded-lg shadow-lg"
+                className="w-full max-h-sm object-cover rounded-lg shadow-lg"
               />
             </div>
           </div>
