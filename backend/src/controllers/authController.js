@@ -90,33 +90,34 @@ export const storage = multer.diskStorage({
 export const upload = multer({ storage });
 
 export const updateName = async (req, res) => {
-  const {name} = req.body;
-  const {id} = req.user.id;
-
-  if(!name || !id) {
-    return res.status(400).json({ message: "Name and user ID are required" });
+  if (!req.user || !req.user.id) {
+    return res.status(401).json({ message: "Unauthorized: user not found" });
   }
-  
+  const { name } = req.body;
+  const id = req.user.id;
+
+  if (!name) {
+    return res.status(400).json({ message: "Name is required" });
+  }
+
   try {
-    
-    const result = await db.query("UPDATE users SET nama = ? WHERE id = ?", [name, id]);
+    const [result] = await db.query("UPDATE users SET nama = ? WHERE id = ?", [name, id]);
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "User not found" });
     }
-
     res.status(200).json({ message: "Name updated successfully" });
   } catch (error) {
     console.error("Error updating name:", error);
     res.status(500).json({ message: "Error updating name", error: error.message });
   }
- }
+}
 
 export const updatePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;  
     const { id } = req.user;  
 
     if (!currentPassword || !newPassword || !id) {
-        return res.status(400).json({ message: 'Current password, new password, or userId is missing' });
+        return res.status(400).json({ message: 'Current password, new password, or user ID is missing' });
     }
 
     try {

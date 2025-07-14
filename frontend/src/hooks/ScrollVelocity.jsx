@@ -31,7 +31,7 @@ function useElementWidth(ref) {
 export const ScrollVelocity = ({
   scrollContainerRef,
   texts = [],
-  velocity = 100,
+  velocity = 200,
   className = "",
   damping = 50,
   stiffness = 400,
@@ -109,7 +109,7 @@ export const ScrollVelocity = ({
   key={i}
   ref={i === 0 ? copyRef : null}
 >
-  <img src={logoKeong} alt={`scroll-img-${i}`} className="h-20 w-auto" />
+  <img src={logoKeong} alt={`scroll-img-${i}`} className="h-20 mb-5 w-auto" />
 </span>
 
       );

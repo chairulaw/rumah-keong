@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { heroImg } from "../assets/assets"; // gambar dummy
+import { heroImg } from "../../assets/assets";
 
 // Dummy data toko
 const stores = [

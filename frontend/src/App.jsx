@@ -10,11 +10,12 @@ import SidebarAdmin from "./components/SidebarAdmin";
 import Homepage from "./pages/Homepage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import CustomerDashboard from "./pages/dashboards/customer/CustomerDashboard";
 import CustomerAddress from "./pages/dashboards/customer/CustomerAddress";
 import ProductDetail from "./pages/ProductDetail";
-import Store from "./pages/store/StorePages";
+import StorePages from "./pages/store/StorePages";
 import DetailStore from "./pages/store/DetailStore";
 
 //DASHBOARD
@@ -46,7 +47,7 @@ function AppContent() {
 
       <div
         className={`flex-1 w-full h-screen overflow-hidden ${
-          isHomepage ? "" : "pt-30"
+          isHomepage ? "" : "pt-16"
         }`}
       >
         {isCustomerPath ? (
@@ -78,9 +79,10 @@ function AppContent() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/checkout" element={<Checkout />} />
-            <Route path="/store" element={<Store />} />
-            <Route path="/store/detail-store" element={<DetailStore />} />
+            <Route path="/store-pages" element={<StorePages />} />
+            <Route path="/store/detail-store/:id" element={<DetailStore />} />
             <Route path="/product" element={<ProductDetail />} />
+            <Route path="/cart" element={<Cart />} />
             {/* Route customer tidak di sini */}
           </Routes>
         )}

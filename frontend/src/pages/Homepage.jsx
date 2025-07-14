@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { heroImg } from "../assets/assets";
+import { heroImg, aboutImg, highlightImg } from "../assets/assets";
 import FadeContent from "../hooks/FadeContent";
 import ScrollVelocity from "../hooks/ScrollVelocity";
 
@@ -94,7 +94,7 @@ const Homepage = () => {
       <section>
         <FadeContent
           blur={true}
-          duration={1000}
+          duration={300}
           easing="ease-out"
           initialOpacity={0}
         >
@@ -102,7 +102,7 @@ const Homepage = () => {
             <div className="max-w mx-auto">
               <div className="relative w-full h-[31rem] rounded-lg shadow-lg overflow-hidden">
                 <img
-                  src={heroImg}
+                  src={highlightImg}
                   alt="Highlighted Product"
                   className="w-full max-h-xl object-cover"
                 />
@@ -147,7 +147,7 @@ const Homepage = () => {
         <div className="flex flex-col md:flex-row gap-10">
           <div className="w-full md:w-1/2">
             <img
-              src={heroImg}
+              src={aboutImg}
               alt="About Us"
               className="w-full max-h-xl object-cover rounded-lg shadow-lg"
             />
@@ -175,7 +175,7 @@ const Homepage = () => {
               feedback and suggestions, and we're always open to new ideas and
               innovations.
             </p>
-            <button className="inline-block px-6 py-2 border border-black text-black rounded-full text-sm hover:bg-black hover:text-white transition-colors duration-200 mt-6">Shop Now</button>
+            <Link to="/store" className="inline-block px-6 py-2 border border-black text-black rounded-full text-sm hover:bg-black hover:text-white transition-colors duration-200 mt-6">Shop Now</Link>
           </div>
         </div>
         </FadeContent>

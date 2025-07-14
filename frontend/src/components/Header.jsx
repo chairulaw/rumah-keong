@@ -32,7 +32,7 @@ const Header = () => {
   const navItemsLeft = [
     { name: "Beranda", path: "/" },
     { name: "Tentang Kami", path: "/about" },
-    { name: "Belanja", path: "/store" },
+    { name: "Belanja", path: "/store-pages" },
   ];
 
   const navItemsRight = [

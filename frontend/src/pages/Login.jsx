@@ -35,18 +35,12 @@ const Login = () => {
           </button>
         </form>
 
-        <div className="flex justify-between mt-5">
+        <div className="flex justify-center mt-5">
           <Link
             to="/register"
-            className="text-sm text-gray-600 hover:underline"
+            className="text-sm text-gray-600 font-semibold hover:underline"
           >
             Create Account?
-          </Link>
-          <Link
-            to="/forgot-password"
-            className="text-sm text-gray-600 hover:underline offset"
-          >
-            Forgot Password?
           </Link>
         </div>
       </div>

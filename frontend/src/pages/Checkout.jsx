@@ -33,7 +33,7 @@ const Checkout = () => {
                 </span>
               </div>
               <span className="text-sm font-semibold text-gray-700">
-                SGD 20.00
+                IDR 50.000
               </span>
             </label>
             {/* Option 2 */}
@@ -50,7 +50,7 @@ const Checkout = () => {
                 </span>
               </div>
               <span className="text-sm font-semibold text-gray-700">
-                SGD 35.00
+                IDR 50.000
               </span>
             </label>
             {/* Option 3 */}
@@ -67,7 +67,7 @@ const Checkout = () => {
                 </span>
               </div>
               <span className="text-sm font-semibold text-gray-700">
-                SGD 40.00
+                IDR 50.000
               </span>
             </label>
             {/* Option 4 */}
@@ -176,7 +176,7 @@ const Checkout = () => {
         />
         <span className="text-sm text-black font-medium">Cash on Delivery</span>
       </div>
-      <span className="text-sm font-semibold text-gray-700">SGD 0.00</span>
+      <span className="text-sm font-semibold text-gray-700">IDR 50.000</span>
     </div>
       </div>
     </div>

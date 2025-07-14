@@ -26,7 +26,7 @@ const stores = [
   },
 ];
 
-const Store = () => {
+const StorePages = () => {
   return (
     <div className="bg-[#f9f6f1] min-h-screen px-6 md:px-12 lg:px-20">
       <div className="max-w-7xl mx-auto py-10">
@@ -73,4 +73,4 @@ const Store = () => {
   );
 };
 
-export default Store;
+export default StorePages;

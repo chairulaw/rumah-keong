@@ -33,10 +33,20 @@ Content-Type: application/json
 
 ###
 //get user profile by ID
-GET http://localhost:3000/api/user/profile/3
+GET http://localhost:3000/api/user/profile/1
 Content-Type: application/json
 
 ###
 //get all users
 GET http://localhost:3000/api/user
 Content-Type: application/json
+
+###
+//auth update user name profile
+PUT http://localhost:3000/api/auth/update-name
+Content-Type: application/json
+Authorization: Bearer <eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZSI6IlBlbWJlbGkiLCJpYXQiOjE3NTIzOTg1MDksImV4cCI6MTc1MzAwMzMwOX0.6N_gWWo-Qxzy26RDzhPMEgBzxxWz-KMlfwivwFsAqUw>
+
+{
+  "name": "bukan users baru"
+}
