@@ -5,15 +5,15 @@ const SidebarSeller = () => {
   const location = useLocation();
 
   const sidebarLeft = [
-    { name: "Dashboard", path: "seller/seller-dashboard" },
-    { name: "Profile Toko", path: "seller/seller-profile" },
+    { name: "Dashboard", path: "/seller/seller-dashboard" },
+    { name: "Profile Toko", path: "/seller/seller-profile" },
     { name: "Produk Saya", path: "/seller/manage-products" },
     { name: "Penjualan Saya", path: "/seller/manage-sales" },
     { name: "Data Pembeli", path: "/seller/buyer-data" },
   ];
 
   return (
-    <div className="w-1/5 h-screen px-5 mt-20">
+    <div className="w-1/5 h-screen px-5 py-20 bg-white">
       {sidebarLeft.map((item, index) => (
         <div
           key={index}

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { heroImg, aboutImg, highlightImg } from "../assets/assets";
+import { heroImg, aboutImg, highlightImg } from "../assets/Assets";
 import FadeContent from "../hooks/FadeContent";
 import ScrollVelocity from "../hooks/ScrollVelocity";
 
@@ -159,21 +159,7 @@ const Homepage = () => {
    
 
             <p className="text-lg text-gray-600">
-              Welcome to our online store! We are a passionate team dedicated to
-              providing you with a delightful shopping experience. Our mission
-              is to curate a diverse selection of high-quality products that will
-              make your life easier and more enjoyable.
-            </p>
-            <p className="text-lg text-gray-600 mt-4">
-              At our store, we believe in the power of personalization and
-              customization. Whether you're looking for a special gift or an
-              item to add to your collection, we have something for everyone.
-            </p>
-            <p className="text-lg text-gray-600 mt-4">
-              Our user-friendly interface and secure payment system ensure a
-              smooth and hassle-free shopping journey for you. We value your
-              feedback and suggestions, and we're always open to new ideas and
-              innovations.
+              Rumah Keong Batam mengubah limbah laut menjadi kerajinan tangan bernilai seni tinggi. Tak hanya memproduksi karya kreatif, Rumah Keong juga menjadi ruang edukasi dan pemberdayaan masyarakat melalui pelatihan kerajinan yang ramah lingkungan dan inspiratif.
             </p>
             <Link to="/store" className="inline-block px-6 py-2 border border-black text-black rounded-full text-sm hover:bg-black hover:text-white transition-colors duration-200 mt-6">Shop Now</Link>
           </div>

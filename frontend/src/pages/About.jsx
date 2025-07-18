@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { aboutImg, aboutImg2 } from "../assets/assets";
+import { aboutImg, aboutImg2 } from "../assets/Assets";
 import FadeContent from "../hooks/FadeContent";
 
 const About = () => {
@@ -22,21 +22,27 @@ const About = () => {
               </h2>
 
               <p className="text-lg text-gray-600">
-                Welcome to our online store! We are a passionate team dedicated
-                to providing you with a delightful shopping experience. Our
-                mission is to curate a diverse selection of high-quality
-                products that will make your life easier and more enjoyable.
+                Rumah Keong Batam adalah sebuah inisiatif kreatif yang
+                mengangkat nilai limbah laut menjadi produk seni bernilai
+                tinggi. Berfokus pada pemanfaatan cangkang keong dan limbah laut
+                lainnya, Rumah Keong menghadirkan berbagai kerajinan tangan unik
+                seperti bunga hias, suvenir, dan dekorasi yang tidak hanya
+                indah, tetapi juga ramah lingkungan.
               </p>
               <p className="text-lg text-gray-600 mt-4">
-                At our store, we believe in the power of personalization and
-                customization. Whether you're looking for a special gift or an
-                item to add to your collection, we have something for everyone.
+                Selain memproduksi karya, Rumah Keong juga aktif memberikan
+                pelatihan kerajinan kepada masyarakat, pelajar, dan komunitas.
+                Tujuannya adalah mendorong pemberdayaan ekonomi lokal,
+                meningkatkan kesadaran lingkungan, serta menumbuhkan jiwa
+                kreatif di tengah masyarakat. Melalui kegiatan edukatif ini,
+                Rumah Keong ingin menunjukkan bahwa limbah bukan akhir dari
+                sebuah nilai, melainkan awal dari sebuah karya.
               </p>
               <p className="text-lg text-gray-600 mt-4">
-                Our user-friendly interface and secure payment system ensure a
-                smooth and hassle-free shopping journey for you. We value your
-                feedback and suggestions, and we're always open to new ideas and
-                innovations.
+                Dengan semangat inovasi dan keberlanjutan, Rumah Keong Batam
+                terus berkembang sebagai rumah bagi kreativitas, pelestarian
+                lingkungan, dan pemberdayaan masyarakat berbasis
+                seni dan budaya.
               </p>
               <Link
                 to="/store-pages"
@@ -55,22 +61,34 @@ const About = () => {
           <div className="flex flex-col md:flex-row gap-10">
             {/* Teks di kiri */}
             <div className="w-full md:w-1/2 flex flex-col justify-center items-baseline">
+              <h2 className="mb-4 text-3xl md:text-4xl font-semibold text-[#1c1c1c]">
+                Website Rumah Keong
+              </h2>
               <p className="text-lg text-gray-600">
-                Welcome to our online store! We are a passionate team dedicated
-                to providing you with a delightful shopping experience. Our
-                mission is to curate a diverse selection of high-quality
-                products that will make your life easier and more enjoyable.
+                Kami adalah rumah kreativitas yang berdedikasi untuk mengubah
+                limbah laut—terutama cangkang keong—menjadi kerajinan tangan
+                yang indah dan bernilai tinggi. Melalui proses daur ulang yang
+                inovatif dan sentuhan seni yang teliti, setiap produk yang kami
+                hasilkan membawa pesan cinta terhadap lingkungan dan semangat
+                pemberdayaan masyarakat.
               </p>
               <p className="text-lg text-gray-600 mt-4">
-                At our store, we believe in the power of personalization and
-                customization. Whether you're looking for a special gift or an
-                item to add to your collection, we have something for everyone.
+                Website ini hadir sebagai jendela untuk mengenal lebih dalam
+                karya-karya kami, mengikuti berbagai kegiatan pelatihan, serta
+                menjelajahi produk unik yang bisa Anda bawa pulang sebagai
+                hiasan, suvenir, atau hadiah bermakna. Tak hanya itu, kami juga
+                membuka ruang kolaborasi dengan komunitas, sekolah, dan
+                institusi yang ingin belajar dan berkontribusi dalam gerakan
+                daur ulang kreatif.
               </p>
               <p className="text-lg text-gray-600 mt-4">
-                Our user-friendly interface and secure payment system ensure a
-                smooth and hassle-free shopping journey for you. We value your
-                feedback and suggestions, and we're always open to new ideas and
-                innovations.
+                Website ini hadir sebagai jendela untuk mengenal lebih dalam
+                karya-karya kami, mengikuti berbagai kegiatan pelatihan, serta
+                menjelajahi produk unik yang bisa Anda bawa pulang sebagai
+                hiasan, suvenir, atau hadiah bermakna. Tak hanya itu, kami juga
+                membuka ruang kolaborasi dengan komunitas, sekolah, dan
+                institusi yang ingin belajar dan berkontribusi dalam gerakan
+                daur ulang kreatif.
               </p>
               <Link
                 to="/store-pages"

@@ -5,8 +5,8 @@ const CustomerAddress = () => {
     
 
   return (
-    <div className="flex justify-center">
-      <button className="relative py-2 px-4 rounded overflow-hidden group">
+    <div className="h-fit flex justify-center mt-20">
+      <button className="relative py-2 px-4 rounded overflow-hidden group cursor-pointer">
         <span className="relative z-10 text-md font-semibold">
           Tambah Alamat Baru
         </span>

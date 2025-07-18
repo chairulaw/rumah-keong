@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { heroImg } from "../../assets/assets";
+import { heroImg } from "../../assets/Assets";
 
 const ProductDetail = () => {
   const [selectedPlanter, setSelectedPlanter] = useState("");
@@ -73,7 +73,7 @@ const ProductDetail = () => {
         <h2 className="text-3xl font-semibold mb-6">Recommended Products</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {planters.map((planter, index) => (
-            <div key={index} className="border cursor-pointer rounded-lg p-4 hover:shadow-lg hover:bg-gray-50 transition-shadow ease-in-out">
+            <div key={index} className="cursor-pointer rounded-lg p-4 hover:shadow-lg hover:bg-gray-50 transition-shadow ease-in-out">
               <img src={heroImg} alt={planter} className="w-full h-48 object-cover rounded mb-4" />
               <h3 className="text-lg font-medium">{planter}</h3>
               <p className="text-gray-600 mt-1">IDR 100.000</p>

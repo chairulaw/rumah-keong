@@ -1,5 +1,5 @@
 import React from "react";
-import { heroImg } from "../../assets/assets";
+import { heroImg } from "../../assets/Assets";
 import { Link } from "react-router-dom";
 
 const stores = [
@@ -8,21 +8,18 @@ const stores = [
     name: "Keong Garden",
     description: "Spesialis tanaman hias & bonsai langka.",
     image: heroImg,
-    isOpen: true,
   },
   {
     id: 2,
     name: "Rimba Tropis",
     description: "Menjual bibit dan tanaman tropis lokal.",
     image: heroImg,
-    isOpen: false,
   },
   {
     id: 3,
     name: "Flora House",
     description: "Toko tanaman rumah minimalis & dekorasi hijau.",
     image: heroImg,
-    isOpen: true,
   },
 ];
 
@@ -39,11 +36,6 @@ const StorePages = () => {
               key={store.id}
               className="bg-white rounded-xl shadow-lg p-6 flex flex-col items-center relative group"
             >
-              {!store.isOpen && (
-                <div className="absolute top-4 right-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-sm z-10">
-                  TUTUP
-                </div>
-              )}
               <img
                 src={store.image}
                 alt={store.name}
@@ -55,14 +47,10 @@ const StorePages = () => {
               <p className="text-sm text-gray-600 mb-4 text-center">{store.description}</p>
               <div className="mt-auto">
                 <Link
-                  to={`/store/${store.id}`}
-                  className={`px-5 py-2 rounded-full text-sm font-medium transition duration-200 ${
-                    store.isOpen
-                      ? "bg-[#1c1c1c] text-white hover:bg-gray-800"
-                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  }`}
+                  to={`/detail-store/${store.id}`}
+                  className="px-5 py-2 rounded-full text-sm font-medium bg-[#1c1c1c] text-white hover:bg-gray-800 transition duration-200"
                 >
-                  {store.isOpen ? "Lihat Toko" : "Toko Tutup"}
+                  Lihat Toko
                 </Link>
               </div>
             </div>
