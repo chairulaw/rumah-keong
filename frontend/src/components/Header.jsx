@@ -7,18 +7,28 @@ const Header = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [scrolled, setScrolled] = useState(false);
   const lastScrollY = useRef(0);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      try {
+        const parsed = JSON.parse(storedUser);
+        setUser(parsed);
+      } catch (error) {
+        console.error("Error parsing user:", error);
+      }
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setScrolled(currentScrollY > 50);
 
-      // Deteksi arah scroll
       if (currentScrollY > lastScrollY.current && currentScrollY > 100) {
-        // Scroll ke bawah -> sembunyikan
         setIsVisible(false);
       } else {
-        // Scroll ke atas -> tampilkan
         setIsVisible(true);
       }
 
@@ -39,6 +49,21 @@ const Header = () => {
     { name: "Masuk", path: "/login" },
     { name: "Hubungi Kami", path: "/#" },
   ];
+
+  const getDashboardPath = (role) => {
+    switch (role) {
+      case "Admin":
+        return "/admin/admin-dashboard";
+      case "Penjual":
+        return "/seller/seller-dashboard";
+      case "Pembeli":
+        return "/customer-dashboard";
+      default:
+        return "/dashboard";
+    }
+  };
+
+
 
   return (
     <header
@@ -71,13 +96,26 @@ const Header = () => {
 
         {/* Right Nav */}
         <nav className="flex items-center gap-6 text-lg text-black flex-1 justify-end">
-          <Link
-            to={navItemsRight[0].path}
-            className="hover:underline underline-offset-8 hover:text-blue-600 transition-colors duration-200"
-          >
-            {navItemsRight[0].name}
-          </Link>
+          {/* Login / User */}
+          {user ? (
+            <>
+              <Link
+                to={getDashboardPath(user.role)}
+                className="hover:underline underline-offset-8 hover:text-blue-600 transition-colors duration-200"
+              >
+                {user.nama || "Dashboard"}
+              </Link>
+            </>
+          ) : (
+            <Link
+              to={navItemsRight[0].path}
+              className="hover:underline underline-offset-8 hover:text-blue-600 transition-colors duration-200"
+            >
+              {navItemsRight[0].name}
+            </Link>
+          )}
 
+          {/* Instagram */}
           <a
             href="https://instagram.com"
             target="_blank"
@@ -87,6 +125,7 @@ const Header = () => {
             <FaInstagram size={20} />
           </a>
 
+          {/* Contact */}
           <Link
             to={navItemsRight[1].path}
             className="p-2 border text-sm rounded-full text-black hover:bg-blue-400 hover:text-white transition-colors duration-200"

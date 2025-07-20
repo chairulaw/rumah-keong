@@ -44,12 +44,6 @@ const About = () => {
                 lingkungan, dan pemberdayaan masyarakat berbasis
                 seni dan budaya.
               </p>
-              <Link
-                to="/store-pages"
-                className="inline-block px-6 py-2 border border-black text-black rounded-full text-sm hover:bg-black hover:text-white transition-colors duration-200 mt-6"
-              >
-                Shop Now
-              </Link>
             </div>
           </div>
         </FadeContent>
@@ -94,7 +88,7 @@ const About = () => {
                 to="/store-pages"
                 className="inline-block px-6 py-2 border border-black text-black rounded-full text-sm hover:bg-black hover:text-white transition-colors duration-200 mt-6"
               >
-                Shop Now
+                Belanja Sekarang
               </Link>
             </div>
             {/* Gambar di kanan */}

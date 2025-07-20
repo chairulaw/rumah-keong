@@ -4,9 +4,8 @@ import { Link } from 'react-router-dom';
 const SidebarCustomer = () => {
   const sidebarLeft = [
     { name: "Profil Saya", path: "/customer-dashboard" },
-    { name: "Pesanan Saya", path: "/customer/orders" },
-    { name: "Transaksi", path: "/customer/payments" },
-    { name: "Alamat", path: "/customer-address" },
+    { name: "Pesanan Saya", path: "/customer-orders" },
+    { name: "Kembali", path: "/" },
   ];
 
   return (

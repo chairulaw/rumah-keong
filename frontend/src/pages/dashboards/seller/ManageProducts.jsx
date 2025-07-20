@@ -1,31 +1,9 @@
-import React, { useState } from "react";
-
-const dummyProducts = [
-  {
-    id: 1,
-    name: "Bonsai Sakura Jepang",
-    price: "Rp 1.250.000",
-    stock: 12,
-    category: "Tanaman",
-  },
-  {
-    id: 2,
-    name: "Mini Kaktus Hias",
-    price: "Rp 75.000",
-    stock: 58,
-    category: "Dekorasi",
-  },
-  {
-    id: 3,
-    name: "Pot Gantung Estetik",
-    price: "Rp 120.000",
-    stock: 20,
-    category: "Aksesoris",
-  },
-];
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const ManageProducts = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({
     name: "",
     description: "",
@@ -33,6 +11,26 @@ const ManageProducts = () => {
     stock: "",
     images: [],
   });
+
+  const token = localStorage.getItem("token");
+
+  // 🔁 Ambil data produk toko
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/produk", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      setProducts(data);
+      console.log(data);
+    } catch (err) {
+      console.error("Gagal fetch produk", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const handleImageChange = (e) => {
     setNewProduct({
@@ -42,24 +40,95 @@ const ManageProducts = () => {
   };
 
   const handleChange = (e) => {
-    setNewProduct({
-      ...newProduct,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    if (name === "price") {
+      const cleaned = value.replace(/[^\d]/g, "");
+      setNewProduct({
+        ...newProduct,
+        price: formatRupiah(cleaned),
+      });
+    } else {
+      setNewProduct({
+        ...newProduct,
+        [name]: value,
+      });
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Produk Baru:", newProduct);
-    setIsOpen(false);
-    setNewProduct({ name: "", description: "", price: "", stock: "", images: [] });
+
+    const form = new FormData();
+    form.append("nama", newProduct.name);
+    form.append("deskripsi", newProduct.description);
+    form.append("harga", newProduct.price.replace(/\./g, "").replace(/,/g, ""));
+    form.append("stok", newProduct.stock);
+    for (const img of newProduct.images) {
+      form.append("gambarProduk", img); // field name harus sama persis dengan upload.array()
+    }
+
+    try {
+      const res = await fetch("http://localhost:3000/api/produk", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // ❌ DO NOT set Content-Type when using FormData
+        },
+        body: form, // ✅ send FormData directly
+      });
+
+      if (res.ok) {
+        alert("Produk berhasil ditambahkan!");
+        setIsOpen(false);
+        setNewProduct({
+          name: "",
+          description: "",
+          price: "",
+          stock: "",
+          images: [],
+        });
+        fetchProducts(); // refresh produk
+      } else {
+        alert("Gagal tambah produk");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Error saat tambah produk");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Yakin ingin menghapus produk ini?")) return;
+
+    try {
+      await fetch(`http://localhost:3000/api/produk/${id}`, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      alert("Produk dihapus");
+      fetchProducts();
+    } catch (err) {
+      console.error(err);
+      alert("Gagal menghapus produk");
+    }
+  };
+
+  const formatRupiah = (angka) => {
+    const numberString = angka.replace(/[^\d]/g, ""); // Hapus semua selain angka
+    const formatted = new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+      minimumFractionDigits: 0,
+    }).format(Number(numberString));
+    return formatted.replace("Rp", "").trim(); // Opsional: Hapus "Rp" agar field tidak ganda
   };
 
   return (
     <div className="flex justify-center mt-20 px-6">
       <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-7xl">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-3xl font-bold text-gray-800">🪴 Produk Saya</h2>
+          <h2 className="text-3xl font-bold text-gray-800">📦 Produk Saya</h2>
           <button
             onClick={() => setIsOpen(true)}
             className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 text-sm"
@@ -72,30 +141,49 @@ const ManageProducts = () => {
           <table className="min-w-full table-auto">
             <thead>
               <tr className="bg-gradient-to-r from-green-400 to-teal-500 text-white text-left text-sm uppercase">
-                <th className="px-4 py-3 rounded-tl-lg">#</th>
+                <th className="px-4 py-3 rounded-tl-lg">No</th>
+                <th className="px-4 py-3">Gambar Produk</th>
                 <th className="px-4 py-3">Nama Produk</th>
                 <th className="px-4 py-3">Harga</th>
                 <th className="px-4 py-3">Stok</th>
-                <th className="px-4 py-3">Kategori</th>
+                <th className="px-4 py-3">Deskripsi</th>
                 <th className="px-4 py-3 rounded-tr-lg">Aksi</th>
               </tr>
             </thead>
             <tbody>
-              {dummyProducts.map((product, index) => (
+              {products.map((product, index) => (
                 <tr
                   key={product.id}
                   className="border-b hover:bg-gray-50 text-sm text-gray-700"
                 >
                   <td className="px-4 py-3">{index + 1}</td>
-                  <td className="px-4 py-3 font-medium">{product.name}</td>
-                  <td className="px-4 py-3">{product.price}</td>
-                  <td className="px-4 py-3">{product.stock}</td>
-                  <td className="px-4 py-3">{product.category}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-wrap gap-2">
+                      {product.gambar_produk?.map((filename, idx) => (
+                        <img
+                          key={idx}
+                          src={`http://localhost:3000/uploads/${filename}`}
+                          alt={`${product.nama}-${idx}`}
+                          className="w-20 h-20 object-cover rounded"
+                        />
+                      ))}
+                    </div>
+                  </td>
+
+                  <td className="px-4 py-3 font-medium">{product.nama}</td>
+                  <td className="px-4 py-3">
+                    Rp {parseInt(product.harga).toLocaleString("id-ID")}
+                  </td>
+                  <td className="px-4 py-3">{product.stok}</td>
+                  <td className="px-4 py-3">{product.deskripsi}</td>
                   <td className="px-4 py-3 space-x-2">
                     <button className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs">
                       Edit
                     </button>
-                    <button className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs">
+                    <button
+                      onClick={() => handleDelete(product.id)}
+                      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs"
+                    >
                       Hapus
                     </button>
                   </td>
@@ -135,10 +223,11 @@ const ManageProducts = () => {
                     name="price"
                     value={newProduct.price}
                     onChange={handleChange}
-                    placeholder="Harga Produk (Rp)"
-                    className="w-1/2 border border-gray-300 rounded px-4 py-2"
+                    placeholder="Harga Produk"
+                    className="pl-10 w-full border border-gray-300 rounded px-4 py-2"
                     required
                   />
+
                   <input
                     type="number"
                     name="stock"

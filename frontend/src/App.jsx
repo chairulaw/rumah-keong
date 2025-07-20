@@ -15,10 +15,11 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Checkout from "./pages/Checkout";
 import CustomerDashboard from "./pages/dashboards/customer/CustomerDashboard";
-import CustomerAddress from "./pages/dashboards/customer/CustomerAddress";
+import CustomerOrders from "./pages/dashboards/customer/CustomerOrders";
 import ProductDetail from "./pages/store/ProductDetail";
 import StorePages from "./pages/store/StorePages";
 import DetailStore from "./pages/store/DetailStore";
+import TransactionDetail from "./pages/TransactionDetail";
 
 //DASHBOARD USERS
 import AdminDashboard from "./pages/dashboards/admin/AdminDashboard";
@@ -55,8 +56,13 @@ function AppContent() {
     "/seller/manage-sales",
     "/seller/buyer-data",
     "/customer-dashboard",
-    "/customer-address",
+    "/customer-orders",
   ];
+
+  const hideFooterPaths = [
+    "/login",
+    "/register"
+  ]
 
   const isDashboardPath = isCustomerPath || isAdminPath || isSellerPath;
 
@@ -73,7 +79,7 @@ function AppContent() {
             <div className="flex-1">
               <Routes>
                 <Route path="/customer-dashboard" element={<CustomerDashboard />} />
-                <Route path="/customer-address" element={<CustomerAddress />} />
+                <Route path="/customer-orders" element={<CustomerOrders />} />
               </Routes>
             </div>
           </div>
@@ -111,12 +117,13 @@ function AppContent() {
             <Route path="/store-pages" element={<StorePages />} />
             <Route path="/detail-store/:id" element={<DetailStore />} />
             <Route path="/detail-product/:id" element={<ProductDetail />} />
+            <Route path="/transaction-detail/:id" element={<TransactionDetail />} />
           </Routes>
         )}
       </div>
 
       {/* Footer tetap tampil di semua halaman */}
-      <Footer />
+      {!hideFooterPaths.includes(location.pathname) && <Footer />}
     </div>
   );
 }

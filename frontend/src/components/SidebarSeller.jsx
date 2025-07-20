@@ -10,6 +10,7 @@ const SidebarSeller = () => {
     { name: "Produk Saya", path: "/seller/manage-products" },
     { name: "Penjualan Saya", path: "/seller/manage-sales" },
     { name: "Data Pembeli", path: "/seller/buyer-data" },
+    { name: "Kembali", path: "/" },
   ];
 
   return (

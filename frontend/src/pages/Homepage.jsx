@@ -8,7 +8,7 @@ const Homepage = () => {
   const products = [
     {
       name: "Cascading Hawthorn Bonsai (Japan)",
-      price: "from IDR 1,500,000",
+      price: "from IDR 1,500,000", 
       image: heroImg, // tanpa kurung kurawal
       soldOut: true,
     },
@@ -46,7 +46,7 @@ const Homepage = () => {
 
             <Link
               to="/shop"
-              className="inline-block px-6 py-2 border border-[#1c1c1c] text-[#1c1c1c] rounded-full text-sm hover:bg-[#1c1c1c] hover:text-white transition-colors duration-200"
+              className="inline-block px-6 py-2 border border-white text-white rounded-full text-sm hover:bg-[#1c1c1c] hover:border-[#1c1c1c] shadow-lg hover:text-white transition-colors duration-200"
             >
               Shop Now
             </Link>
@@ -65,16 +65,19 @@ const Homepage = () => {
         <section className="bg-[#fcf7ef] py-20 px-6 md:px-12 lg:px-20">
           <div className="flex justify-between items-center mb-10">
             <h2 className="text-3xl md:text-4xl font-semibold text-[#1c1c1c]">
-              Featured Products
+              Product Unggulan
             </h2>
             <button className="border border-[#1c1c1c] px-4 py-2 rounded-full hover:bg-[#1c1c1c] hover:text-white transition">
-              View All
+              Lihat Semua Toko
             </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 ">
             {products.map((product, index) => (
-              <div key={index} className="text-center rounded-4xl relative group cursor-pointer">
+              <div
+                key={index}
+                className="text-center rounded-4xl relative group cursor-pointer"
+              >
                 <img
                   src={product.image}
                   alt={product.name}
@@ -104,9 +107,13 @@ const Homepage = () => {
                 <img
                   src={highlightImg}
                   alt="Highlighted Product"
-                  className="w-full max-h-xl object-cover"
+                  className="w-full h-full object-cover"
                 />
-                <div className="absolute bottom-0 left-0  p-6 w-full md:w-2/3 rounded-b-lg">
+
+                {/* Gradient overlay */}
+                <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+
+                <div className="absolute bottom-0 left-0 p-6 w-full md:w-2/3 rounded-b-lg z-10">
                   <h2 className="text-3xl md:text-4xl font-semibold text-white mb-2">
                     Highlighted Product
                   </h2>
@@ -127,43 +134,45 @@ const Homepage = () => {
         </FadeContent>
       </section>
 
- <FadeContent>
-
-<ScrollVelocity
-  texts={[
-    "/assets/logoKeong.png",
-    "/assets/logoKeong.png"
-  ]}
-  velocity={100}
-  className="mx-10"
-/>
- </FadeContent>
-
+      <FadeContent>
+        <ScrollVelocity
+          texts={["/assets/logoKeong.png", "/assets/logoKeong.png"]}
+          velocity={100}
+          className="mx-10"
+        />
+      </FadeContent>
 
       {/* About Us Section */}
       <section className="bg-[#f9f6f1] py-20 px-6 md:px-12 lg:px-20">
         <FadeContent>
+          <div className="flex flex-col md:flex-row gap-10">
+            <div className="w-full md:w-1/2">
+              <img
+                src={aboutImg}
+                alt="About Us"
+                className="w-full max-h-xl object-cover rounded-lg shadow-lg"
+              />
+            </div>
+            <div className="w-full md:w-1/2 flex flex-col justify-center items-baseline">
+              <h2 className="mb-4 text-3xl md:text-4xl font-semibold text-[#1c1c1c]">
+                About Us
+              </h2>
 
-        <div className="flex flex-col md:flex-row gap-10">
-          <div className="w-full md:w-1/2">
-            <img
-              src={aboutImg}
-              alt="About Us"
-              className="w-full max-h-xl object-cover rounded-lg shadow-lg"
-            />
+              <p className="text-lg text-gray-600">
+                Rumah Keong Batam mengubah limbah laut menjadi kerajinan tangan
+                bernilai seni tinggi. Tak hanya memproduksi karya kreatif, Rumah
+                Keong juga menjadi ruang edukasi dan pemberdayaan masyarakat
+                melalui pelatihan kerajinan yang ramah
+                lingkungan dan inspiratif.
+              </p>
+              <Link
+                to="/store"
+                className="inline-block px-6 py-2 border border-black text-black rounded-full text-sm hover:bg-black hover:text-white transition-colors duration-200 mt-6"
+              >
+                Shop Now
+              </Link>
+            </div>
           </div>
-          <div className="w-full md:w-1/2 flex flex-col justify-center items-baseline">
-          <h2 className="mb-4 text-3xl md:text-4xl font-semibold text-[#1c1c1c]">
-            About Us
-          </h2>
-   
-
-            <p className="text-lg text-gray-600">
-              Rumah Keong Batam mengubah limbah laut menjadi kerajinan tangan bernilai seni tinggi. Tak hanya memproduksi karya kreatif, Rumah Keong juga menjadi ruang edukasi dan pemberdayaan masyarakat melalui pelatihan kerajinan yang ramah lingkungan dan inspiratif.
-            </p>
-            <Link to="/store" className="inline-block px-6 py-2 border border-black text-black rounded-full text-sm hover:bg-black hover:text-white transition-colors duration-200 mt-6">Shop Now</Link>
-          </div>
-        </div>
         </FadeContent>
       </section>
     </div>

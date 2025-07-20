@@ -1,5 +1,4 @@
-import React from "react";
-import { useRef, useLayoutEffect, useState } from "react";
+import React, { useRef, useLayoutEffect, useState } from "react";
 import {
   motion,
   useScroll,
@@ -9,8 +8,9 @@ import {
   useVelocity,
   useAnimationFrame,
 } from "framer-motion";
-import { logoKeong } from "../assets/Assets";
+import { logoKeong } from "../assets/Assets"; // Ganti path jika perlu
 
+// Hook untuk mendapatkan lebar elemen
 function useElementWidth(ref) {
   const [width, setWidth] = useState(0);
 
@@ -20,6 +20,7 @@ function useElementWidth(ref) {
         setWidth(ref.current.offsetWidth);
       }
     }
+
     updateWidth();
     window.addEventListener("resize", updateWidth);
     return () => window.removeEventListener("resize", updateWidth);
@@ -35,15 +36,14 @@ export const ScrollVelocity = ({
   className = "",
   damping = 50,
   stiffness = 400,
-  numCopies = 12,
+  numCopies = 20,
   velocityMapping = { input: [0, 1000], output: [0, 5] },
-  parallaxClassName,
-  scrollerClassName,
+  parallaxClassName = "",
+  scrollerClassName = "",
   parallaxStyle,
   scrollerStyle,
 }) => {
   function VelocityText({
-    children,
     baseVelocity = velocity,
     scrollContainerRef,
     className = "",
@@ -62,66 +62,64 @@ export const ScrollVelocity = ({
       : {};
     const { scrollY } = useScroll(scrollOptions);
     const scrollVelocity = useVelocity(scrollY);
-    const smoothVelocity = useSpring(scrollVelocity, {
-      damping: damping ?? 50,
-      stiffness: stiffness ?? 400,
-    });
+    const smoothVelocity = useSpring(scrollVelocity, { damping, stiffness });
     const velocityFactor = useTransform(
       smoothVelocity,
-      velocityMapping?.input || [0, 1000],
-      velocityMapping?.output || [0, 5],
+      velocityMapping.input,
+      velocityMapping.output,
       { clamp: false }
     );
 
     const copyRef = useRef(null);
     const copyWidth = useElementWidth(copyRef);
 
-    function wrap(min, max, v) {
+    const wrap = (min, max, value) => {
       const range = max - min;
-      const mod = (((v - min) % range) + range) % range;
-      return mod + min;
-    }
+      return ((((value - min) % range) + range) % range) + min;
+    };
 
-    const x = useTransform(baseX, (v) => {
-      if (copyWidth === 0) return "0px";
-      return `${wrap(-copyWidth * numCopies, 0, v)}px`;
-    });
+    const x = useTransform(baseX, (v) =>
+      copyWidth > 0 ? `${wrap(-copyWidth * numCopies, 0, v)}px` : "0px"
+    );
 
     const directionFactor = useRef(1);
     useAnimationFrame((t, delta) => {
+      if (copyWidth <= 0) return;
+
       let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
+      const factor = velocityFactor.get();
 
-      if (velocityFactor.get() < 0) {
-        directionFactor.current = -1;
-      } else if (velocityFactor.get() > 0) {
-        directionFactor.current = 1;
-      }
+      directionFactor.current = factor < 0 ? -1 : 1;
+      moveBy += directionFactor.current * moveBy * Math.abs(factor);
 
-      moveBy += directionFactor.current * moveBy * velocityFactor.get();
       baseX.set(baseX.get() + moveBy);
     });
 
     const spans = [];
-    for (let i = 0; i < (numCopies ?? 1); i++) {
+    for (let i = 0; i < numCopies; i++) {
       spans.push(
         <span
-  className={`flex-shrink-0 ${className}`}
-  key={i}
-  ref={i === 0 ? copyRef : null}
->
-  <img src={logoKeong} alt={`scroll-img-${i}`} className="h-20 mb-5 w-auto" />
-</span>
-
+          className={`flex-shrink-0 ${className}`}
+          key={i}
+          ref={i === 0 ? copyRef : null}
+          style={{ minWidth: "auto" }}
+        >
+          <img
+            src={logoKeong}
+            alt={`scroll-img-${i}`}
+            className="h-20 w-auto mb-5"
+          />
+        </span>
       );
     }
 
     return (
       <div
-        className={`${parallaxClassName} relative overflow-hidden`}
+        className={`relative overflow-hidden ${parallaxClassName}`}
         style={parallaxStyle}
       >
         <motion.div
-          className={`${scrollerClassName} flex whitespace-nowrap text-center font-sans text-4xl font-bold tracking-[-0.02em] drop-shadow md:text-[5rem] md:leading-[5rem]`}
+          className={`flex whitespace-nowrap will-change-transform ${scrollerClassName}`}
           style={{ x, ...scrollerStyle }}
         >
           {spans}
@@ -135,9 +133,9 @@ export const ScrollVelocity = ({
       {texts.map((text, index) => (
         <VelocityText
           key={index}
-          className={className}
           baseVelocity={index % 2 !== 0 ? -velocity : velocity}
           scrollContainerRef={scrollContainerRef}
+          className={className}
           damping={damping}
           stiffness={stiffness}
           numCopies={numCopies}
@@ -146,9 +144,7 @@ export const ScrollVelocity = ({
           scrollerClassName={scrollerClassName}
           parallaxStyle={parallaxStyle}
           scrollerStyle={scrollerStyle}
-        >
-          {text}&nbsp;
-        </VelocityText>
+        />
       ))}
     </section>
   );

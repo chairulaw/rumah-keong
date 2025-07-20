@@ -89,6 +89,12 @@ export const storage = multer.diskStorage({
 
 export const upload = multer({ storage });
 
+export const getProfile = async (req, res) => {
+    const [rows] = await db.query("SELECT id, nama, email, no_hp, alamat, foto_profile FROM users WHERE id = ?", [req.user.id]);
+  if (!rows.length) return res.status(404).json({ message: "User not found" });
+  res.json(rows[0]);
+}
+
 export const updateName = async (req, res) => {
   if (!req.user || !req.user.id) {
     return res.status(401).json({ message: "Unauthorized: user not found" });
@@ -137,28 +143,11 @@ export const updateAlamat = async (req, res) => {
 }
 
 export const updateNoHp = async (req, res) => {
-  if(!req.user || !req.user.id) {
-    return res.status(401).json({ message: "Unauthorized: user not found" });
-  }
-
   const { no_hp } = req.body;
-  const id = req.user.id;
+  await db.query("UPDATE users SET no_hp = ? WHERE id = ?", [no_hp, req.user.id]);
+  res.json({ message: "No HP updated" });
+};
 
-  if(!no_hp) {
-    return res.status(400).json({message: "No HP is required"});
-  } 
-
-  try {
-    const [result] = await db.query("UPDATE users SET no_hp = ? WHERE id = ?", [no_hp, id]);
-    if(result.affectedRows === 0) {
-      return res.status(404).json({message: "User not found"})
-    }
-
-    return res.status(200).json({message: "No HP updated successfully"})
-  } catch (error) {
-    return res.status(500).json({message: "Error updating No HP", error: error.message});
-  }
-}
 
 export const updatePassword = async (req, res) => {
   const { currentPassword, newPassword } = req.body;  
