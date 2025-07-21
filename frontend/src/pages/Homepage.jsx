@@ -41,14 +41,14 @@ const Homepage = () => {
         <div className="relative z-10 h-full flex items-center px-6 md:px-12 lg:px-20">
           <div className="max-w-xl">
             <h1 className="text-3xl md:text-5xl font-regular text-white leading-snug mb-6">
-              ‘As interesting <br className="hidden sm:block" /> as a plant’
+              ‘Rumahnya aksesoris <br className="hidden sm:block" /> Batam’
             </h1>
 
             <Link
               to="/shop"
               className="inline-block px-6 py-2 border border-white text-white rounded-full text-sm hover:bg-[#1c1c1c] hover:border-[#1c1c1c] shadow-lg hover:text-white transition-colors duration-200"
             >
-              Shop Now
+              Belanja Sekarang
             </Link>
           </div>
         </div>
@@ -115,11 +115,10 @@ const Homepage = () => {
 
                 <div className="absolute bottom-0 left-0 p-6 w-full md:w-2/3 rounded-b-lg z-10">
                   <h2 className="text-3xl md:text-4xl font-semibold text-white mb-2">
-                    Highlighted Product
+                    Berbagai macam Toko
                   </h2>
                   <p className="text-lg text-gray-200 mb-4">
-                    Discover the beauty and craftsmanship of our highlighted
-                    product.
+                    Temukan berbagai macam toko aksesoris pilihan anda
                   </p>
                   <Link
                     to="/shop"

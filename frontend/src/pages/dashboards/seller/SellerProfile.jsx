@@ -157,7 +157,8 @@ const handleSubmit = async (e) => {
               placeholder="Email@gmail.com"
               value={formData.email}
               onChange={handleChange}
-              className="w-full border-b border-gray-300 focus:outline-none focus:border-black py-2"
+              className="w-full border-b border-gray-300 py-2 bg-gray-100 text-gray-500 cursor-not-allowed"
+              disabled
             />
             <input
               type="password"
