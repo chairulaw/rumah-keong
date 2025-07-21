@@ -200,6 +200,51 @@ export const getInvoiceById = async (req, res) => {
   });
 };
 
+// GET /api/invoices
+export const getInvoicesForUser = async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      `SELECT 
+         t.kode_transaksi AS id,
+         t.tanggal_bayar AS date,
+         tk.nama AS namaToko,
+         t.status,
+         GROUP_CONCAT(CONCAT(p.nama, ':', dt.quantity, ':', dt.sub_total) SEPARATOR '|') AS produk_list
+       FROM transaksis t
+       JOIN tokos tk ON t.toko_id = tk.id
+       JOIN detail_transaksis dt ON t.id = dt.transaksi_id
+       JOIN produks p ON dt.produk_id = p.id
+       WHERE t.pembeli_id = ?
+       GROUP BY t.id
+       ORDER BY t.tanggal_bayar DESC`,
+      [req.user.id]
+    );
+
+    // Format ulang hasil query ke bentuk JSON yang bersih
+    const result = rows.map((row) => ({
+      id: row.id,
+      date: row.date,
+      namaToko: row.namaToko,
+      status: row.status,
+      produk_list: row.produk_list
+        ? row.produk_list.split("|").map((item) => {
+            const [nama_produk, quantity, sub_total] = item.split(":");
+            return {
+              nama_produk,
+              quantity: parseInt(quantity),
+              sub_total: parseInt(sub_total),
+            };
+          })
+        : [],
+    }));
+
+    res.json(result);
+  } catch (err) {
+    console.error("Gagal ambil invoice:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
 
 
 export const getAnalytics = async (req, res) => {
@@ -249,4 +294,30 @@ export const updateStatusByPembeli = async (req, res) => {
 
   await db.query("UPDATE transaksis SET status = 'diterima' WHERE id = ?", [id]);
   res.json({ message: "Status updated to DITERIMA" });
+};
+
+export const updateTransaksiStatus = async (req, res) => {
+  const { id } = req.params; // kode_transaksi
+  const { status } = req.body;
+  
+  const allowedStatuses = ["pending", "paid", "proses", "dikirim", "diterima", "selesai"];
+  if (!allowedStatuses.includes(status)) {
+    return res.status(400).json({ message: "Status tidak valid" });
+  }
+
+  try {
+    const [result] = await db.query(
+      "UPDATE transaksis SET status = ? WHERE kode_transaksi = ?",
+      [status, id]
+    );
+    
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Transaksi tidak ditemukan" });
+    }
+    
+    res.json({ message: "Status transaksi berhasil diperbarui" });
+  } catch (error) {
+    console.error("Update status error:", error);
+    res.status(500).json({ message: "Gagal memperbarui status" });
+  }
 };

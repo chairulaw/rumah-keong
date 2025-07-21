@@ -1,50 +1,8 @@
-import React, { useState } from "react";
-
-const initialSales = [
-  {
-    id: "INV001",
-    namaToko: "Andi Saputra",
-    product: "Bonsai Sakura Jepang",
-    date: "2025-07-10",
-    quantity: 1,
-    price: "Rp 1.250.000",
-    total: "Rp 1.250.000",
-    status: "selesai",
-  },
-  {
-    id: "INV002",
-    namaToko: "Siti Rahma",
-    product: "Mini Kaktus Hias",
-    date: "2025-07-12",
-    quantity: 1,
-    price: "Rp 1.250.000",
-    total: "Rp 75.000",
-    status: "proses",
-  },
-  {
-    id: "INV003",
-    namaToko: "Budi Santoso",
-    product: "Pot Gantung Estetik",
-    date: "2025-07-13",
-    quantity: 1,
-    price: "Rp 1.250.000",
-    total: "Rp 120.000",
-    status: "dikirim",
-  },
-];
-
-const statusOptions = [
-  "pending",
-  "paid",
-  "proses",
-  "dikirim",
-  "diterima",
-  "selesai",
-];
+import React, { useState, useEffect } from "react";
 
 const statusColors = {
   pending: "bg-gray-400",
-  paid: "bg-yellow-500",
+  paid: "bg-green-500",
   proses: "bg-blue-400",
   dikirim: "bg-indigo-500",
   diterima: "bg-teal-500",
@@ -52,14 +10,27 @@ const statusColors = {
 };
 
 const CustomerOrders = () => {
-  const [sales, setSales] = useState(initialSales);
+  const [sales, setSales] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleStatusChange = (id, newStatus) => {
-    const updatedSales = sales.map((sale) =>
-      sale.id === id ? { ...sale, status: newStatus } : sale
-    );
-    setSales(updatedSales);
-  };
+  useEffect(() => {
+    fetch("http://localhost:3000/api/transaksi/pembeli/invoices", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setSales(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch invoices", err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return <div className="text-center mt-10">Loading...</div>;
 
   return (
     <div className="flex justify-center mt-20 px-6">
@@ -76,44 +47,41 @@ const CustomerOrders = () => {
                 <th className="px-4 py-3">Tanggal</th>
                 <th className="px-4 py-3">Nama Toko</th>
                 <th className="px-4 py-3">Produk</th>
-                <th className="px-4 py-3">Jumlah</th>
-                <th className="px-4 py-3">Harga</th>
+                <th className="px-4 py-3">Qty</th>
                 <th className="px-4 py-3">Total</th>
                 <th className="px-4 py-3 rounded-tr-lg">Status</th>
               </tr>
             </thead>
             <tbody>
-              {sales.map((sale) => (
-                <tr
-                  key={sale.id}
-                  className="border-b hover:bg-gray-50 text-sm text-gray-700"
-                >
-                  <td className="px-4 py-3 font-medium">{sale.id}</td>
-                  <td className="px-4 py-3">{sale.date}</td>
-                  <td className="px-4 py-3">{sale.namaToko}</td>
-                  <td className="px-4 py-3">{sale.product}</td>
-                  <td className="px-4 py-3">{sale.quantity}</td>
-                  <td className="px-4 py-3">{sale.price}</td>
-                  <td className="px-4 py-3">{sale.total}</td>
-                  <td className="px-4 py-3">
-                    {/* <select
-                      value={sale.status}
-                      onChange={(e) =>
-                        handleStatusChange(sale.id, e.target.value)
-                      }
-                      className={`text-white text-xs font-medium px-3 py-1 rounded focus:outline-none ${
-                        statusColors[sale.status]
-                      }`}
-                    >
-                      {statusOptions.map((status) => (
-                        <option key={status} value={status}>
-                          {status.charAt(0).toUpperCase() + status.slice(1)}
-                        </option>
+              {sales.map((sale) => {
+                const totalQty = sale.produk_list?.reduce((acc, item) => acc + item.quantity, 0);
+                const totalHarga = sale.produk_list?.reduce((acc, item) => acc + item.sub_total, 0);
+
+                return (
+                  <tr
+                    key={sale.id}
+                    className="border-b hover:bg-gray-50 text-sm text-gray-700"
+                  >
+                    <td className="px-4 py-3 font-medium">{sale.id}</td>
+                    <td className="px-4 py-3">{sale.date}</td>
+                    <td className="px-4 py-3">{sale.namaToko}</td>
+                    <td className="px-4 py-3">
+                      {sale.produk_list?.map((item, idx) => (
+                        <div key={idx}>{item.nama_produk}</div>
                       ))}
-                    </select> */}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="px-4 py-3 text-center">{totalQty}</td>
+                    <td className="px-4 py-3">Rp {totalHarga?.toLocaleString()}</td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`text-white text-xs font-medium px-3 py-1 rounded ${statusColors[sale.status]}`}
+                      >
+                        {sale.status}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

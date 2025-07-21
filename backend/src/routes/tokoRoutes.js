@@ -2,6 +2,7 @@ import express from "express";
 import { protect } from "../middlewares/authMiddleware.js";
 import {
   getAllToko,
+  getSalesByTokoId,
   getTokoById,
   getMyToko,
   updateToko
@@ -15,6 +16,7 @@ router.get("/me", protect, getMyToko);
 router.put("/me", protect, upload.single("logo_toko"), updateToko);
 
 router.get("/", getAllToko);
+router.get("/my-sales", protect, getSalesByTokoId);
 router.get("/:id", getTokoById);
 
 export default router;

@@ -3,6 +3,7 @@ import {protect} from "../middlewares/authMiddleware.js";
 import {authorizeRoles} from "../middlewares/roleMiddlewares.js";
 import {
     konfirmasiTransaksi,
+    getInvoicesForUser,
     getSnapToken,
     getTransactionByKode,
     getMyTransaksiPembeli,
@@ -10,7 +11,8 @@ import {
     getAnalytics,
     getMyTokoTransaksi,
     updateStatusByPembeli,
-    updateStatusByPenjual
+    updateStatusByPenjual,
+    updateTransaksiStatus
 } from "../controllers/transaksiController.js";
 
 const router = express.Router();
@@ -21,10 +23,12 @@ router.post("/snap-token", protect, authorizeRoles("Pembeli"), getSnapToken);
 // Pindahkan ini ke bawah
 router.get("/pembeli", protect, authorizeRoles("Pembeli"), getMyTransaksiPembeli);
 router.get("/pembeli/:id/invoice", protect, authorizeRoles("Pembeli"), getInvoiceById);
+router.get("/pembeli/invoices", protect, authorizeRoles("Pembeli"), getInvoicesForUser);
 router.get("/analytics", protect, authorizeRoles("Admin"), getAnalytics);
 router.get("/toko", protect, authorizeRoles("Penjual"), getMyTokoTransaksi);
 router.put("/status/proses/:id", protect, authorizeRoles("Pembeli"), updateStatusByPembeli);
 router.put("/status/diterima/:id", protect, authorizeRoles("Penjual"), updateStatusByPenjual);
+router.put("/status/:id", protect, authorizeRoles("Admin"), updateTransaksiStatus);
 
 // TARUH PALING BAWAH
 router.get("/:kode_transaksi", protect, authorizeRoles("Pembeli"), getTransactionByKode);

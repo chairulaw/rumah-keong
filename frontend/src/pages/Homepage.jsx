@@ -8,7 +8,7 @@ const Homepage = () => {
   const products = [
     {
       name: "Cascading Hawthorn Bonsai (Japan)",
-      price: "from IDR 1,500,000", 
+      price: "from IDR 1,500,000",
       image: heroImg, // tanpa kurung kurawal
       soldOut: true,
     },
@@ -53,45 +53,6 @@ const Homepage = () => {
           </div>
         </div>
       </section>
-
-      {/* Featured Product Section */}
-
-      <FadeContent
-        blur={true}
-        duration={1000}
-        easing="ease-out"
-        initialOpacity={0}
-      >
-        <section className="bg-[#fcf7ef] py-20 px-6 md:px-12 lg:px-20">
-          <div className="flex justify-between items-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-semibold text-[#1c1c1c]">
-              Product Unggulan
-            </h2>
-            <button className="border border-[#1c1c1c] px-4 py-2 rounded-full hover:bg-[#1c1c1c] hover:text-white transition">
-              Lihat Semua Toko
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 ">
-            {products.map((product, index) => (
-              <div
-                key={index}
-                className="text-center rounded-4xl relative group cursor-pointer"
-              >
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-[300px] object-contain mx-auto mb-4 transition-transform group-hover:scale-105 duration-300"
-                />
-                <h3 className="text-lg font-medium text-[#1c1c1c]">
-                  {product.name}
-                </h3>
-                <p className="text-sm text-gray-600 mt-1">{product.price}</p>
-              </div>
-            ))}
-          </div>
-        </section>
-      </FadeContent>
 
       {/* Highlight 1 Product Section */}
       <section>
@@ -174,6 +135,72 @@ const Homepage = () => {
           </div>
         </FadeContent>
       </section>
+
+            {/* Alamat Section */}
+      <FadeContent
+        blur={true}
+        duration={1000}
+        easing="ease-out"
+        initialOpacity={0}
+      >
+        <section className="bg-[#fcf7ef] py-20 px-6 md:px-12 lg:px-20">
+  <div className="flex flex-col lg:flex-row items-center lg:items-center gap-6">
+    {/* Kontak di kiri */}
+    <div className="w-1/2 pr-8">
+      <h2 className="text-4xl font-semibold text-[#1c1c1c] mb-4">
+        Hubungi Kami
+      </h2>
+      <p className="text-gray-700 mb-3 leading-relaxed">
+        Rumah Keong Experience Space<br />
+        Jl. Hang Lekiu KM. 4, RT.03 / RW.02,<br />
+        Kel. Sambau, Kec. Nongsa, Kota Batam,<br />
+        Kepulauan Riau 29465, Indonesia
+      </p>
+
+      <p className="text-gray-700 mb-4">
+        <strong>Buka Jam:</strong><br />
+        Setiap Hari: 08.00 - 20.00
+      </p>
+
+      <div className="flex items-center space-x-4 mt-4">
+        <a
+          href="https://wa.me/6281261558277"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#25D366] text-3xl hover:opacity-80"
+        >
+          <i className="fab fa-whatsapp"></i>
+        </a>
+        <a
+          href="https://www.instagram.com/rumah.keongbatam/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#E1306C] text-3xl hover:opacity-80"
+        >
+          <i className="fab fa-instagram"></i>
+        </a>
+      </div>
+    </div>
+
+    {/* Map di kanan */}
+    <div className="w-full lg:w-1/2">
+      <div className="w-full h-[28rem] rounded-lg overflow-hidden shadow-md">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.1779103998365!2d104.05972658572038!3d1.026587359873086!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31d991006d516d71%3A0x31a32a8165fdfa51!2sRumah%20Keong!5e0!3m2!1sen!2sid!4v1753113160853!5m2!1sen!2sid"
+          width="100%"
+          height="100%"
+          style={{ border: 0 }}
+          allowFullScreen=""
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          className="w-full h-full"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+      </FadeContent>
     </div>
   );
 };

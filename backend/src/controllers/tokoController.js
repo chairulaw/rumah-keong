@@ -24,7 +24,6 @@ export const getTokoById = async (req, res) => {
   }
 }
 
-
 export const getMyToko = async (req, res) => {
   const [rows] = await db.query("SELECT * FROM tokos WHERE owner_id = ?", [req.user.id]);
   res.json(rows[0] || {});
@@ -56,5 +55,39 @@ export const updateToko = async (req, res) => {
   }
 };
 
+export const getSalesByTokoId = async (req, res) => {
+  try {
+    // Ambil toko berdasarkan owner_id
+    const [[toko]] = await db.query(
+      "SELECT id FROM tokos WHERE owner_id = ?",
+      [req.user.id]
+    );
 
+    if (!toko) {
+      return res.status(404).json({ message: "Toko tidak ditemukan" });
+    }
+
+    const [rows] = await db.query(
+      `SELECT 
+         t.kode_transaksi AS id,
+         u.nama AS buyer,
+         p.nama AS product,
+         DATE(t.tanggal_bayar) AS date,
+         dt.sub_total AS total,
+         t.status
+       FROM transaksis t
+       JOIN users u ON t.pembeli_id = u.id
+       JOIN detail_transaksis dt ON dt.transaksi_id = t.id
+       JOIN produks p ON dt.produk_id = p.id
+       WHERE t.toko_id = ?
+       ORDER BY t.tanggal_bayar DESC`,
+      [toko.id]
+    );
+
+    res.json(rows);
+  } catch (error) {
+    console.error("Gagal mengambil data penjualan:", error);
+    res.status(500).json({ message: "Gagal mengambil penjualan" });
+  }
+};
 

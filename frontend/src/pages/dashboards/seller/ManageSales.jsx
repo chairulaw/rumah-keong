@@ -1,31 +1,4 @@
-import React, { useState } from "react";
-
-const initialSales = [
-  {
-    id: "INV001",
-    buyer: "Andi Saputra",
-    product: "Bonsai Sakura Jepang",
-    date: "2025-07-10",
-    total: "Rp 1.250.000",
-    status: "selesai",
-  },
-  {
-    id: "INV002",
-    buyer: "Siti Rahma",
-    product: "Mini Kaktus Hias",
-    date: "2025-07-12",
-    total: "Rp 75.000",
-    status: "proses",
-  },
-  {
-    id: "INV003",
-    buyer: "Budi Santoso",
-    product: "Pot Gantung Estetik",
-    date: "2025-07-13",
-    total: "Rp 120.000",
-    status: "dikirim",
-  },
-];
+import React, { useEffect, useState } from "react";
 
 const statusOptions = [
   "pending",
@@ -46,13 +19,45 @@ const statusColors = {
 };
 
 const ManageSales = () => {
-  const [sales, setSales] = useState(initialSales);
+  const [sales, setSales] = useState([]);
 
-  const handleStatusChange = (id, newStatus) => {
-    const updatedSales = sales.map((sale) =>
-      sale.id === id ? { ...sale, status: newStatus } : sale
-    );
-    setSales(updatedSales);
+  const fetchSales = async () => {
+    try {
+      const res = await fetch("http://localhost:3000/api/toko/my-sales", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      const data = await res.json();
+      setSales(data);
+    } catch (error) {
+      console.error("Gagal mengambil data penjualan:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSales();
+  }, []);
+
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      await fetch(`http://localhost:3000/api/transaksi/status/${id}`, {
+  method: "PUT",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
+  body: JSON.stringify({ status: newStatus }),
+});
+
+
+      const updatedSales = sales.map((sale) =>
+        sale.id === id ? { ...sale, status: newStatus } : sale
+      );
+      setSales(updatedSales);
+    } catch (error) {
+      console.error("Gagal memperbarui status:", error);
+    }
   };
 
   return (
@@ -84,7 +89,12 @@ const ManageSales = () => {
                   <td className="px-4 py-3">{sale.buyer}</td>
                   <td className="px-4 py-3">{sale.product}</td>
                   <td className="px-4 py-3">{sale.date}</td>
-                  <td className="px-4 py-3">{sale.total}</td>
+                  <td className="px-4 py-3">
+                    {Number(sale.total).toLocaleString("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                    })}
+                  </td>
                   <td className="px-4 py-3">
                     <select
                       value={sale.status}
@@ -92,7 +102,7 @@ const ManageSales = () => {
                         handleStatusChange(sale.id, e.target.value)
                       }
                       className={`text-white text-xs font-medium px-3 py-1 rounded focus:outline-none ${
-                        statusColors[sale.status]
+                        statusColors[sale.status] || "bg-gray-300"
                       }`}
                     >
                       {statusOptions.map((status) => (
@@ -104,6 +114,16 @@ const ManageSales = () => {
                   </td>
                 </tr>
               ))}
+              {sales.length === 0 && (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="text-center text-gray-500 py-6 text-sm"
+                  >
+                    Belum ada transaksi penjualan.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
