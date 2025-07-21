@@ -31,7 +31,6 @@ import ManageTransactions from "./pages/dashboards/admin/ManageTransactions";
 import SellerDashboard from "./pages/dashboards/seller/SellerDashboard";
 import SellerProfile from "./pages/dashboards/seller/SellerProfile";
 import ManageProducts from "./pages/dashboards/seller/ManageProducts";
-import BuyerData from "./pages/dashboards/seller/BuyerData";
 import ManageSales from "./pages/dashboards/seller/ManageSales";
 
 //DASHBOARD ADMIN
@@ -54,7 +53,6 @@ function AppContent() {
     "/seller/seller-profile",
     "/seller/manage-products",
     "/seller/manage-sales",
-    "/seller/buyer-data",
     "/customer-dashboard",
     "/customer-orders",
   ];
@@ -103,7 +101,6 @@ function AppContent() {
                 <Route path="/seller/seller-profile" element={<SellerProfile />} />
                 <Route path="/seller/manage-products" element={<ManageProducts />} />
                 <Route path="/seller/manage-sales" element={<ManageSales />} />
-                <Route path="/seller/buyer-data" element={<BuyerData />} />
               </Routes>
             </div>
           </div>

@@ -9,7 +9,6 @@ const SidebarSeller = () => {
     { name: "Profile Toko", path: "/seller/seller-profile" },
     { name: "Produk Saya", path: "/seller/manage-products" },
     { name: "Penjualan Saya", path: "/seller/manage-sales" },
-    { name: "Data Pembeli", path: "/seller/buyer-data" },
     { name: "Kembali", path: "/" },
   ];
 
