@@ -6,18 +6,40 @@ import path from "path";
 
 export const register = async (req, res) => {
   const { email, password, nama, role } = req.body;
-  const hashed = await bcrypt.hash(password, 10);
-  const [existing] = await db.query("SELECT * FROM users WHERE email = ?", [email]);
-  if (existing.length)
-    return res.status(400).json({ message: "Email exists" });
 
-  const [result] = await db.query(
-    "INSERT INTO users (email, password, nama, role) VALUES (?, ?, ?, ?)",
-    [email, hashed, nama, role || "Pembeli"]
-  );
-  const user = { id: result.insertId, email, role };
-  res.status(201).json({ ...user, token: generateToken(user) });
+  try {
+    const hashed = await bcrypt.hash(password, 10);
+
+    const [existing] = await db.query("SELECT * FROM users WHERE email = ?", [email]);
+    if (existing.length)
+      return res.status(400).json({ message: "Email exists" });
+
+    // 1. Insert user ke tabel users
+    const [result] = await db.query(
+      "INSERT INTO users (email, password, nama, role) VALUES (?, ?, ?, ?)",
+      [email, hashed, nama, role || "Pembeli"]
+    );
+
+    const userId = result.insertId;
+    const user = { id: userId, email, role: role || "Pembeli" };
+
+    // 2. Jika role = Penjual, buat entri baru di tabel tokos
+    if (role === "Penjual") {
+      await db.query(
+        "INSERT INTO tokos (owner_id, nama, email) VALUES (?, ?, ?)",
+        [userId, nama, email]
+      );
+    }
+
+    // 3. Return response
+    res.status(201).json({ ...user, token: generateToken(user) });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Register failed" });
+  }
 };
+
 
 export const login = async (req, res) => {
   const { email, password } = req.body;

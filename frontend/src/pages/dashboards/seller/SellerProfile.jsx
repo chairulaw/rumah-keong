@@ -60,39 +60,40 @@ const SellerProfile = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const form = new FormData();
-    form.append("nama", formData.nama);
-    form.append("alamat", formData.alamat);
-    form.append("deskripsi", formData.deskripsi);
-    form.append("no_hp", formData.no_hp);
-    form.append("email", formData.email);
-    if (file) {
-      form.append("logo_toko", file);
-    }
+  const form = new FormData();
+  form.append("nama", formData.nama);
+  form.append("alamat", formData.alamat);
+  form.append("deskripsi", formData.deskripsi);
+  form.append("no_hp", formData.no_hp);
+  form.append("email", formData.email);
+  if (file) {
+    form.append("logo_toko", file); // file asli, bukan preview URL
+  }
 
-    try {
-      const res = await fetch("http://localhost:3000/api/toko/me", {
-  method: "PUT",
-  headers: {
-    Authorization: `Bearer ${token}`
-  },
-  body: formData
-});
+  try {
+    const res = await fetch("http://localhost:3000/api/toko/me", {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        // ⚠️ Jangan tambahkan Content-Type, biarkan browser handle multipart
+      },
+      body: form, // ← ini penting
+    });
 
+    if (!res.ok) throw new Error("Gagal update toko");
 
-      if (!res.ok) throw new Error("Gagal update toko");
+    const data = await res.json();
+    alert("Perubahan berhasil disimpan");
+    console.log(data);
+  } catch (err) {
+    console.error(err);
+    alert("Gagal menyimpan perubahan.");
+  }
+};
 
-      alert("Perubahan berhasil disimpan");
-
-      console.log(data)
-    } catch (err) {
-      console.error(err);
-      alert("Gagal menyimpan perubahan.");
-    }
-  };
 
   return (
     <div className="h-fit flex justify-center mt-20">

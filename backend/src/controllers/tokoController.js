@@ -31,19 +31,30 @@ export const getMyToko = async (req, res) => {
 };
 
 export const updateToko = async (req, res) => {
-  const { nama, alamat, deskripsi, no_hp, email } = req.body;
+  try {
+    // Pastikan req.body tidak undefined
+    const { nama, alamat, deskripsi, no_hp, email } = req.body || {};
 
-  // Ambil logo lama jika tidak ada file baru
-  const [[toko]] = await db.query("SELECT logo_toko FROM tokos WHERE owner_id = ?", [req.user.id]);
-  const logo_toko = req.file ? req.file.filename : null;
-  const finalLogo = logo_toko || toko.logo_toko;
+    if (!nama || !alamat || !deskripsi || !no_hp || !email) {
+      return res.status(400).json({ message: "Semua field harus diisi" });
+    }
 
-  await db.query(
-    "UPDATE tokos SET nama=?, alamat=?, deskripsi=?, no_hp=?, email=?, logo_toko=? WHERE owner_id=?",
-    [nama, alamat, deskripsi, no_hp, email, finalLogo, req.user.id]
-  );
+    // Ambil logo lama jika tidak ada file baru
+    const [[toko]] = await db.query("SELECT logo_toko FROM tokos WHERE owner_id = ?", [req.user.id]);
+    const logo_toko = req.file ? req.file.filename : null;
+    const finalLogo = logo_toko || toko.logo_toko;
 
-  res.json({ message: "Toko updated", logo_toko: finalLogo });
+    await db.query(
+      "UPDATE tokos SET nama=?, alamat=?, deskripsi=?, no_hp=?, email=?, logo_toko=? WHERE owner_id=?",
+      [nama, alamat, deskripsi, no_hp, email, finalLogo, req.user.id]
+    );
+
+    res.json({ message: "Toko updated", logo_toko: finalLogo });
+  } catch (error) {
+    console.error("Update toko error:", error);
+    res.status(500).json({ message: "Gagal update toko" });
+  }
 };
+
 
 
