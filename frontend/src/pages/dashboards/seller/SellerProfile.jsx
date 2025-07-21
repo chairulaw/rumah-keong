@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { data } from "react-router-dom";
 
 const SellerProfile = () => {
   const [profileImage, setProfileImage] = useState(null);
@@ -74,17 +75,19 @@ const SellerProfile = () => {
 
     try {
       const res = await fetch("http://localhost:3000/api/toko/me", {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          // Jangan set Content-Type di sini, biarkan browser yg set
-        },
-        body: form,
-      });
+  method: "PUT",
+  headers: {
+    Authorization: `Bearer ${token}`
+  },
+  body: formData
+});
+
 
       if (!res.ok) throw new Error("Gagal update toko");
 
       alert("Perubahan berhasil disimpan");
+
+      console.log(data)
     } catch (err) {
       console.error(err);
       alert("Gagal menyimpan perubahan.");

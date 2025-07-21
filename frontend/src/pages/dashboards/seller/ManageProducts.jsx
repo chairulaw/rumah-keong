@@ -13,24 +13,42 @@ const ManageProducts = () => {
   });
 
   const token = localStorage.getItem("token");
+  const [tokoId, setTokoId] = useState(null);
 
-  // 🔁 Ambil data produk toko
-  const fetchProducts = async () => {
+  // Ambil data toko milik user
+  const fetchTokoId = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/produk", {
+      const res = await axios.get("http://localhost:3000/api/toko/me", {
         headers: { Authorization: `Bearer ${token}` },
       });
-      const data = await res.json();
-      setProducts(data);
-      console.log(data);
+      setTokoId(res.data.id);
+    } catch (err) {
+      console.error("Gagal mendapatkan toko", err);
+    }
+  };
+
+  // Ambil produk milik toko user
+  const fetchProducts = async () => {
+    if (!tokoId) return;
+    try {
+      const res = await axios.get(`http://localhost:3000/api/produk/toko/${tokoId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setProducts(res.data);
     } catch (err) {
       console.error("Gagal fetch produk", err);
     }
   };
 
   useEffect(() => {
-    fetchProducts();
+    fetchTokoId();
   }, []);
+
+  useEffect(() => {
+    if (tokoId) {
+      fetchProducts();
+    }
+  }, [tokoId]);
 
   const handleImageChange = (e) => {
     setNewProduct({
@@ -65,7 +83,7 @@ const ManageProducts = () => {
     form.append("harga", newProduct.price.replace(/\./g, "").replace(/,/g, ""));
     form.append("stok", newProduct.stock);
     for (const img of newProduct.images) {
-      form.append("gambarProduk", img); // field name harus sama persis dengan upload.array()
+      form.append("gambarProduk", img); // field name sesuai multer upload.array
     }
 
     try {
@@ -73,9 +91,8 @@ const ManageProducts = () => {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
-          // ❌ DO NOT set Content-Type when using FormData
         },
-        body: form, // ✅ send FormData directly
+        body: form,
       });
 
       if (res.ok) {
@@ -88,7 +105,7 @@ const ManageProducts = () => {
           stock: "",
           images: [],
         });
-        fetchProducts(); // refresh produk
+        fetchProducts(); // Refresh data produk
       } else {
         alert("Gagal tambah produk");
       }
@@ -115,13 +132,13 @@ const ManageProducts = () => {
   };
 
   const formatRupiah = (angka) => {
-    const numberString = angka.replace(/[^\d]/g, ""); // Hapus semua selain angka
+    const numberString = angka.replace(/[^\d]/g, "");
     const formatted = new Intl.NumberFormat("id-ID", {
       style: "currency",
       currency: "IDR",
       minimumFractionDigits: 0,
     }).format(Number(numberString));
-    return formatted.replace("Rp", "").trim(); // Opsional: Hapus "Rp" agar field tidak ganda
+    return formatted.replace("Rp", "").trim();
   };
 
   return (
@@ -152,10 +169,7 @@ const ManageProducts = () => {
             </thead>
             <tbody>
               {products.map((product, index) => (
-                <tr
-                  key={product.id}
-                  className="border-b hover:bg-gray-50 text-sm text-gray-700"
-                >
+                <tr key={product.id} className="border-b hover:bg-gray-50 text-sm text-gray-700">
                   <td className="px-4 py-3">{index + 1}</td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-2">
@@ -169,7 +183,6 @@ const ManageProducts = () => {
                       ))}
                     </div>
                   </td>
-
                   <td className="px-4 py-3 font-medium">{product.nama}</td>
                   <td className="px-4 py-3">
                     Rp {parseInt(product.harga).toLocaleString("id-ID")}
@@ -227,7 +240,6 @@ const ManageProducts = () => {
                     className="pl-10 w-full border border-gray-300 rounded px-4 py-2"
                     required
                   />
-
                   <input
                     type="number"
                     name="stock"
@@ -274,7 +286,6 @@ const ManageProducts = () => {
                 </div>
               </form>
 
-              {/* Tombol Close (X) */}
               <button
                 className="absolute top-3 right-3 text-gray-500 hover:text-red-500 text-xl"
                 onClick={() => setIsOpen(false)}

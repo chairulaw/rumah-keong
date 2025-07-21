@@ -1,4 +1,137 @@
 import db from "../config/database.js";
+import midtransClient from "midtrans-client";
+import { v4 as uuidv4 } from "uuid";
+import dotenv from "dotenv";
+
+dotenv.config();
+
+// GET Snap Token (tanpa insert DB)
+export const getSnapToken = async (req, res) => {
+  try {
+    const { produk_list } = req.body;
+
+    if (!produk_list || produk_list.length === 0) {
+      return res.status(400).json({ message: "Daftar produk kosong" });
+    }
+
+    const total = produk_list.reduce(
+      (acc, item) => acc + item.harga_satuan * item.quantity,
+      0
+    );
+
+    const snap = new midtransClient.Snap({
+      isProduction: false,
+      serverKey: process.env.MIDTRANS_SERVER_KEY,
+      clientKey: process.env.MIDTRANS_CLIENT_KEY, // tidak wajib, hanya untuk frontend
+    });
+
+    const parameter = {
+      transaction_details: {
+        order_id: "TRX-" + Date.now(),
+        gross_amount: total,
+      },
+      customer_details: {
+        first_name: req.user.nama || "Pembeli",
+        email: req.user.email || "default@email.com",
+      },
+    };
+
+    const snapResponse = await snap.createTransaction(parameter);
+
+    res.json({ snapToken: snapResponse.token });
+  } catch (err) {
+    console.error("Gagal membuat Snap Token:", err);
+    res.status(500).json({ message: "Gagal membuat Snap Token" });
+  }
+};
+
+
+
+export const konfirmasiTransaksi = async (req, res) => {
+  try {
+    const { produk_list, order_id, payment_type, total } = req.body;
+
+    if (!produk_list || !order_id || !total) {
+      return res.status(400).json({ message: "Data tidak lengkap" });
+    }
+
+    // Ambil toko_id dari produk pertama
+    const firstProductId = produk_list[0].id;
+    const [produkResult] = await db.query(
+      `SELECT toko_id FROM produks WHERE id = ?`,
+      [firstProductId]
+    );
+
+    if (produkResult.length === 0) {
+      return res.status(404).json({ message: "Produk tidak ditemukan" });
+    }
+
+    const toko_id = produkResult[0].toko_id;
+
+    // Simpan transaksi dengan toko_id
+    const [result] = await db.query(
+      `INSERT INTO transaksis 
+        (kode_transaksi, pembeli_id, toko_id, payment_method, total, status, tanggal_bayar, created_at, updated_at) 
+       VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW(), NOW())`,
+      [order_id, req.user.id, toko_id, payment_type, total, "paid"]
+    );
+
+    const transaksi_id = result.insertId;
+
+    // Simpan detail produk dalam transaksi
+    for (let item of produk_list) {
+      const sub_total = item.harga_satuan * item.quantity;
+
+      await db.query(
+        `INSERT INTO detail_transaksis 
+          (transaksi_id, produk_id, quantity, harga_satuan, sub_total, created_at, updated_at) 
+         VALUES (?, ?, ?, ?, ?, NOW(), NOW())`,
+        [transaksi_id, item.id, item.quantity, item.harga_satuan, sub_total]
+      );
+    }
+
+    res.json({ message: "Transaksi berhasil disimpan", transaksi_id });
+  } catch (error) {
+    console.error("Gagal konfirmasi transaksi:", error);
+    res.status(500).json({ message: "Gagal konfirmasi transaksi" });
+  }
+};
+
+
+export const getTransactionByKode = async (req, res) => {
+  const { kode_transaksi } = req.params;
+
+  try {
+    // Ambil data transaksi berdasarkan kode_transaksi
+    const [transaksiRows] = await db.query(
+      `SELECT * FROM transaksis WHERE kode_transaksi = ? AND pembeli_id = ?`,
+      [kode_transaksi, req.user.id]
+    );
+
+    if (transaksiRows.length === 0) {
+      return res.status(404).json({ message: "Transaksi tidak ditemukan" });
+    }
+
+    const transaksi = transaksiRows[0];
+
+    // Ambil detail produk dalam transaksi
+    const [detailRows] = await db.query(
+      `SELECT dt.*, p.nama AS nama_produk, p.gambar_produk 
+       FROM detail_transaksis dt
+       JOIN produks p ON dt.produk_id = p.id
+       WHERE dt.transaksi_id = ?`,
+      [transaksi.id]
+    );
+
+    res.json({
+      transaksi,
+      detail_transaksi: detailRows,
+    });
+  } catch (error) {
+    console.error("Gagal mengambil data transaksi:", error);
+    res.status(500).json({ message: "Gagal mengambil data transaksi", error: error.message });
+  }
+};
 
 
 export const getMyTransaksiPembeli = async (req, res) => {
@@ -36,28 +169,38 @@ export const getMyTokoTransaksi = async (req, res) => {
 };
 
 export const getInvoiceById = async (req, res) => {
-    const { id } = req.params;
+  const { id } = req.params;
 
-    const {transaksi} = await db.query(
-        "SELECT t.*, tk.nama AS nama_toko FROM transaksis t JOIN tokos tk ON t.toko_id = tk.id WHERE t.id = ? AND t.pembeli_id = ?",
-        [id, req.user.id]
+  const [transaksiRows] = await db.query(
+    `SELECT t.*, tk.nama AS nama_toko 
+     FROM transaksis t 
+     JOIN tokos tk ON t.toko_id = tk.id 
+     WHERE t.kode_transaksi = ? AND t.pembeli_id = ?`,
+    [id, req.user.id]
+  );
+
+  if (transaksiRows.length === 0) {
+    return res.status(404).json({ message: "Invoice not found" });
+  }
+
+  const transaksi = transaksiRows[0];
+
+    const [details] = await db.query(
+      `SELECT dt.*, p.nama AS nama_produk, p.gambar_produk 
+       FROM detail_transaksis dt
+       JOIN produks p ON dt.produk_id = p.id
+       WHERE dt.transaksi_id = ?`,
+      [transaksi.id]
     );
 
-    if (!transaksi) {
-        return res.status(404).json({ message: "Invoice not found" });
-    }
-
-    const [details] =  await db.query(
-        "SELECT dt.*, p.nama AS nama_produk FROM detail_transaksis dt JOIN produk p ON dt.produk_id = p.id WHERE dt.transaksi_id = ?",
-        [id]
-    )
-
-    res.json({
-        transaksi: transaksi[0],
-        produk_list: details,
-        grand_total: details.reduce((acc, cur) => acc + parseFloat(cur.sub_total), 0),
-    });
+  res.json({
+    transaksi,
+    produk_list: details,
+    grand_total: details.reduce((acc, cur) => acc + parseFloat(cur.sub_total), 0),
+  });
 };
+
+
 
 export const getAnalytics = async (req, res) => {
   const [byStatus] = await db.query(`

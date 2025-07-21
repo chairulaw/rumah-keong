@@ -2,42 +2,40 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const Checkout = () => {
-  const { state } = useLocation();
+  const { state } = useLocation(); // state berisi product dan quantity
   const navigate = useNavigate();
 
-const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
 
-useEffect(() => {
-  const fetchUserProfile = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
+  // Ambil data user (nama, alamat, no_hp)
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
 
-    try {
-      const res = await fetch("http://localhost:3000/api/auth/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      try {
+        const res = await fetch("http://localhost:3000/api/auth/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      if (!res.ok) {
-        console.error("Gagal ambil profil pengguna");
-        return;
+        if (!res.ok) {
+          console.error("Gagal ambil profil pengguna");
+          return;
+        }
+
+        const data = await res.json();
+        setUser(data);
+      } catch (err) {
+        console.error("Error ambil profil:", err);
       }
+    };
 
-      const data = await res.json();
-      setUser(data); // sekarang berisi nama, alamat, no_hp
-      console.log("Profil lengkap:", data);
+    fetchUserProfile();
+  }, []);
 
-    } catch (err) {
-      console.error("Error ambil profil:", err);
-    }
-  };
-
-  fetchUserProfile();
-}, []);
-
-
-
+  // Cek apakah data produk dan quantity tersedia
   if (!state || !state.product || !state.quantity) {
     return (
       <div className="min-h-screen flex items-center justify-center text-center">
@@ -56,50 +54,83 @@ useEffect(() => {
 
   const { product, quantity } = state;
 
-  const handlePay = async () => {
-    try {
-      const response = await fetch("http://localhost:3000/api/create-transaction", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          productId: product.id,
-          quantity,
-          amount: product.harga * quantity,
-          customer: {
-            nama: user?.nama,
-            alamat: user?.alamat,
-            no_hp: user?.no_hp,
-          },
-        }),
-      });
+const handlePay = async () => {
+  const token = localStorage.getItem("token");
 
-      const data = await response.json();
-      const snapToken = data.snapToken;
+  const produk_list = [
+    {
+      id: product.id,
+      quantity: quantity,
+      harga_satuan: product.harga,
+    },
+  ];
 
-      window.snap.pay(snapToken, {
-        onSuccess: (result) => {
-          console.log("Success:", result);
-          alert("Pembayaran berhasil!");
-        },
-        onPending: (result) => {
-          console.log("Pending:", result);
-          alert("Menunggu pembayaran...");
-        },
-        onError: (error) => {
-          console.error("Error:", error);
-          alert("Terjadi kesalahan pembayaran.");
-        },
-      });
-    } catch (err) {
-      console.error("Transaksi gagal:", err);
-      alert("Gagal membuat transaksi.");
+  try {
+    // Step 1: Dapatkan Snap Token dulu
+    const snapResponse = await fetch("http://localhost:3000/api/transaksi/snap-token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ produk_list }),
+    });
+
+    if (!snapResponse.ok) {
+      throw new Error("Gagal membuat Snap Token");
     }
-  };
+
+    const { snapToken } = await snapResponse.json();
+
+    // Step 2: Midtrans pop-up
+    window.snap.pay(snapToken, {
+      onSuccess: async function (result) {
+        try {
+          // Step 3: Simpan transaksi ke DB setelah sukses bayar
+          await fetch("http://localhost:3000/api/transaksi/konfirmasi", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  },
+  body: JSON.stringify({
+    produk_list,
+    order_id: result.order_id,
+    payment_type: result.payment_type,
+    total: result.gross_amount,
+    toko_id: product.toko_id, // ✅ TAMBAHKAN INI
+  }),
+});
+
+
+          navigate(`/transaction-detail/${result.order_id}`, {
+  state: {
+    transactionId: result.order_id,
+  },
+});
+
+        } catch (err) {
+          console.error("Gagal menyimpan transaksi:", err);
+        }
+      },
+      onError: function (err) {
+        console.error("Pembayaran gagal:", err);
+      },
+    });
+  } catch (err) {
+    console.error("Gagal membuat Snap Token:", err);
+  }
+};
+
+
+
+
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-[#f9f6f1] overflow-y-auto py-10">
+      {/* Rincian Produk */}
       <div className="bg-white p-8 border border-gray-300 w-full max-w-md mb-5">
-        <h1 className=" text-black font-semibold mb-4">Rincian Produk</h1>
+        <h1 className="text-black font-semibold mb-4">Rincian Produk</h1>
         <div className="flex gap-4">
           <img
             src={`http://localhost:3000/uploads/${product.gambar_produk[0]}`}
@@ -116,7 +147,7 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* Alamat Pengiriman Otomatis */}
+      {/* Alamat Pengiriman */}
       <div className="bg-white p-8 border border-gray-300 w-full max-w-md">
         <h1 className="text-black font-semibold mb-4">Alamat Pengiriman</h1>
         <form className="space-y-4">
@@ -178,12 +209,11 @@ useEffect(() => {
         </button>
 
         <button
-  onClick={() => navigate(`/detail-product/${product.id}`)}
-  className="mt-3 text-center cursor-pointer w-full text-red-600 hover:underline transition"
->
-  Batal Checkout
-</button>
-
+          onClick={() => navigate(`/detail-product/${product.id}`)}
+          className="mt-3 text-center cursor-pointer w-full text-red-600 hover:underline transition"
+        >
+          Batal Checkout
+        </button>
       </div>
     </div>
   );

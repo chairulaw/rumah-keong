@@ -61,14 +61,17 @@ const CustomerDashboard = () => {
 
 if (imageFile) {
   const formData = new FormData();
-  formData.append("foto_profile", imageFile); // <- harus cocok dengan `upload.single("foto_profile")`
-  await fetch(`http://localhost:3000/api/auth/profile-image/0`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}` }, // Tanpa 'Content-Type' agar FormData terbaca
-    body: formData,
-  });
-}
+formData.append("foto_profile", imageFile);
 
+await fetch(`http://localhost:3000/api/auth/profile-image`, {
+  method: "POST", // Sesuai dengan router backend
+  headers: {
+    Authorization: `Bearer ${token}`,
+    // Jangan set Content-Type, biarkan browser yang atur untuk FormData
+  },
+  body: formData,
+});
+}
 
       if (form.currentPassword && form.newPassword)
         await fetch(`http://localhost:3000/api/auth/update-password/0`, {

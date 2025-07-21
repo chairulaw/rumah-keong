@@ -13,52 +13,49 @@ const Login = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setErrorMsg("");
+  e.preventDefault();
+  setIsLoading(true);
+  setErrorMsg("");
 
-    try {
-      const res = await fetch("http://localhost:3000/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+  try {
+    const res = await fetch("http://localhost:3000/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        setErrorMsg(data.message || "Login gagal");
-        toast.error(data.message || "Login gagal", { position: "top-right" });
-        return;
-      }
-
-      // simpan token & info user
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      toast.success("Login berhasil!", {
-        position: "top-right",
-        autoClose: 1500,
-      });
-
-      // beri sedikit jeda supaya toast sempat terlihat
-      setTimeout(() => {
-  const role = data.role;
-  if (role === "Admin") {
-    navigate("/admin/admin-dashboard");
-  } else {
-    navigate("/");
-  }
-}, 1500);
-
-
-    } catch (err) {
-      setErrorMsg("Terjadi kesalahan. Silakan coba lagi.");
-      toast.error("Terjadi kesalahan server.", { position: "top-right" });
-    } finally {
-      setIsLoading(false);
+    if (!res.ok || !data.user || !data.token) {
+      setErrorMsg(data.message || "Login gagal");
+      toast.error(data.message || "Login gagal", { position: "top-right" });
+      return;
     }
-  };
+
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    toast.success("Login berhasil!", {
+      position: "top-right",
+      autoClose: 1500,
+    });
+
+    setTimeout(() => {
+      const role = data.user.role;
+      if (role === "Admin") {
+        navigate("/admin/admin-dashboard");
+      } else {
+        navigate("/");
+      }
+    }, 1500);
+
+  } catch (err) {
+    setErrorMsg("Terjadi kesalahan. Silakan coba lagi.");
+    toast.error("Terjadi kesalahan server.", { position: "top-right" });
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div

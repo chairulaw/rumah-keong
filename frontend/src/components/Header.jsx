@@ -10,16 +10,21 @@ const Header = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      try {
-        const parsed = JSON.parse(storedUser);
-        setUser(parsed);
-      } catch (error) {
-        console.error("Error parsing user:", error);
-      }
+  const storedUser = localStorage.getItem("user");
+
+  // Pastikan bukan null atau "undefined"
+  if (storedUser && storedUser !== "undefined") {
+    try {
+      const parsed = JSON.parse(storedUser);
+      setUser(parsed);
+    } catch (error) {
+      console.error("Error parsing user:", error);
     }
-  }, []);
+  } else {
+    console.warn("No valid user found in localStorage");
+  }
+}, []);
+
 
   useEffect(() => {
     const handleScroll = () => {
