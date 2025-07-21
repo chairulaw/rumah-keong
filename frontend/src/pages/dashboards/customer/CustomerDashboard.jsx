@@ -3,16 +3,17 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const CustomerDashboard = () => {
+  const [profileImage, setProfileImage] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
   const [form, setForm] = useState({
     name: "",
     no_hp: "",
     alamat: "",
     email: "",
+    foto_profile: "",
     currentPassword: "",
     newPassword: "",
   });
-  const [profileImage, setProfileImage] = useState(null);
-  const [imageFile, setImageFile] = useState(null);
 
   const token = localStorage.getItem("token");
 
@@ -58,6 +59,17 @@ const CustomerDashboard = () => {
           body: JSON.stringify({ alamat: form.alamat }),
         });
 
+if (imageFile) {
+  const formData = new FormData();
+  formData.append("foto_profile", imageFile); // <- harus cocok dengan `upload.single("foto_profile")`
+  await fetch(`http://localhost:3000/api/auth/profile-image/0`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` }, // Tanpa 'Content-Type' agar FormData terbaca
+    body: formData,
+  });
+}
+
+
       if (form.currentPassword && form.newPassword)
         await fetch(`http://localhost:3000/api/auth/update-password/0`, {
           method: "PUT",
@@ -68,15 +80,20 @@ const CustomerDashboard = () => {
           }),
         });
 
-      if (imageFile) {
-        const formData = new FormData();
-        formData.append("profile", imageFile);
-        await fetch(`http://localhost:3000/api/auth/profile-image/0`, {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData,
-        });
-      }
+      // Jika ada imageFile, upload terakhir setelah data lain
+if (imageFile) {
+  const formData = new FormData();
+  formData.append("foto_profile", imageFile);
+
+  await fetch(`http://localhost:3000/api/auth/profile-image`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+}
+
 
       toast.success("Berhasil Update Profil!", {
               position: "top-right",
@@ -107,11 +124,13 @@ useEffect(() => {
         no_hp: data.no_hp || "",
         alamat: data.alamat || "",
         email: data.email || "",
+        foto_profile: data.foto_profile || "",
       }));
 
-      if (data.profile_image_url) {
-        setProfileImage(`http://localhost:3000/uploads/${data.profile_image_url}`);
-      }
+if (data.foto_profile) {
+  setProfileImage(`http://localhost:3000/${data.foto_profile}`);
+}
+
 
     } catch (err) {
       console.error("Gagal fetch profil:", err);
@@ -135,11 +154,16 @@ useEffect(() => {
 
         <div className="flex flex-col items-center mb-6">
           <div className="relative w-32 h-32 mb-2">
-            <img
-              src={profileImage}
-              alt="Profile"
-              className="w-32 h-32 object-cover rounded-full border-4 border-gray-300 shadow"
-            />
+            {(profileImage || form.foto_profile) && (
+              <img
+                src={
+                  profileImage ||
+                  `http://localhost:3000/uploads/${form.foto_profile}`
+                }
+                alt="Logo Toko"
+                className="w-32 h-32 object-cover rounded-full border-4 border-gray-300 shadow"
+              />
+            )}
             <label className="absolute bottom-2 right-2 bg-gray-700 text-white p-2 rounded-full cursor-pointer hover:bg-gray-900">
               <input
                 type="file"

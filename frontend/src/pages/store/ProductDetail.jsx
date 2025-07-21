@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 
@@ -6,6 +7,18 @@ const ProductDetail = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
+
+const navigate = useNavigate();
+
+const handleBuyNow = () => {
+  navigate("/checkout", {
+    state: {
+      product,
+      quantity,
+    },
+  });
+};
+
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -37,7 +50,7 @@ const ProductDetail = () => {
             className="inline-flex items-center text-gray-500 hover:text-black transition duration-200"
           >
             <ArrowLeftIcon className="w-4 h-4 mr-2" />
-            <span className="text-sm font-medium">Back to Store</span>
+            <span className="text-sm font-medium">Kembali Ke Toko</span>
           </Link>
         </div>
 
@@ -56,7 +69,7 @@ const ProductDetail = () => {
 
           {/* Informasi Produk */}
           <div className="space-y-6">
-            <h1 className="text-4xl font-light tracking-tight">{product.nama}</h1>
+            <h1 className="text-4xl font-semibold tracking-tight">{product.nama}</h1>
             <p className="text-2xl font-medium text-green-800">
               IDR {parseInt(product.harga).toLocaleString("id-ID")}
             </p>
@@ -91,8 +104,8 @@ const ProductDetail = () => {
                 />
               </div>
 
-              <button className="w-full md:w-auto px-6 py-3 bg-black text-white rounded-full hover:bg-gray-800 transition">
-                Add to Cart
+              <button onClick={handleBuyNow} className="w-full md:w-auto px-6 py-3 bg-black cursor-pointer text-white rounded-full hover:bg-gray-800 transition">
+                Beli Sekarang
               </button>
             </div>
           </div>

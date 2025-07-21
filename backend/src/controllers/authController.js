@@ -40,41 +40,29 @@ export const login = async (req, res) => {
 
 export const addProfileImage = async (req, res) => {
   try {
-    if (!req.file) {
-      return res.status(400).json({ message: 'No file uploaded' });
-    }
+    const userId = req.user.id;
+    const filename = req.file.filename;
 
-    console.log('Uploaded file:', req.file);
+    const imagePath = `uploads/${filename}`;
 
-  
-    const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif'];
-    if (!allowedMimeTypes.includes(req.file.mimetype)) {
-      fs.unlinkSync(req.file.path); 
-      return res.status(400).json({ message: 'Invalid file type. Only image files are allowed.' });
-    }
+    const sql = "UPDATE users SET foto_profile = ? WHERE id = ?";
+    db.query(sql, [imagePath, userId], (err, result) => {
+      if (err) {
+        console.error("MySQL error:", err);
+        return res.status(500).json({ message: "Database update failed" });
+      }
 
-    const fileName = req.file.filename;
-    const profileImagePath = path.join('uploads', fileName); 
-
-    if (!req.user || !req.user.id) {
-      return res.status(400).json({ message: 'User ID is missing or invalid' });
-    }
-
-   
-    const result = await query('UPDATE users SET foto_profile = ? WHERE id = ?', [profileImagePath, req.user.id]);
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
-    res.status(200).json({
-      message: 'Profile image uploaded successfully',
-      profileImage: profileImagePath,
+      res.status(200).json({
+        message: "Foto profil berhasil diupload",
+        imagePath,
+      });
     });
-
   } catch (error) {
-    console.error('Error uploading image:', error);  
-    res.status(500).json({ message: 'Error uploading profile image', error: error.message });
+    console.error("Upload error:", error);
+    res.status(500).json({
+      message: "Error uploading profile image",
+      error: error.message,
+    });
   }
 };
 
