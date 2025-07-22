@@ -28,7 +28,7 @@ router.get("/analytics", protect, authorizeRoles("Admin"), getAnalytics);
 router.get("/toko", protect, authorizeRoles("Penjual"), getMyTokoTransaksi);
 router.put("/status/proses/:id", protect, authorizeRoles("Pembeli"), updateStatusByPembeli);
 router.put("/status/diterima/:id", protect, authorizeRoles("Penjual"), updateStatusByPenjual);
-router.put("/status/:id", protect, authorizeRoles("Admin"), updateTransaksiStatus);
+router.put("/status/:id", protect, authorizeRoles("Penjual"), updateTransaksiStatus);
 
 // TARUH PALING BAWAH
 router.get("/:kode_transaksi", protect, authorizeRoles("Pembeli"), getTransactionByKode);

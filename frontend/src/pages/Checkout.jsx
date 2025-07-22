@@ -158,7 +158,7 @@ const Checkout = () => {
         <div className="border border-gray-300 rounded p-4 mb-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <input type="radio" name="payment" checked readOnly />
-            <span className="text-sm font-medium text-gray-700">Bayar via Midtrans</span>
+            <span className="text-sm font-medium text-gray-700">Payment Gateway (Mbanking, Ewallet, Qris)</span>
           </div>
           <span className="text-sm font-semibold text-black">
             Total: IDR {(product.harga * quantity).toLocaleString("id-ID")}
@@ -167,14 +167,14 @@ const Checkout = () => {
 
         <button
           onClick={handlePay}
-          className="bg-black w-full text-white px-6 py-3 rounded hover:bg-gray-800 transition font-semibold text-sm"
+          className="bg-black w-full cursor-pointer text-white px-6 py-3 rounded hover:bg-gray-800 transition font-semibold text-sm"
         >
           Bayar Sekarang
         </button>
 
         <button
           onClick={() => navigate(`/detail-product/${product.id}`)}
-          className="mt-3 text-center w-full text-sm text-red-600 hover:underline transition"
+          className="mt-3 text-center cursor-pointer w-full text-sm text-red-600 hover:underline transition"
         >
           Batal Checkout
         </button>

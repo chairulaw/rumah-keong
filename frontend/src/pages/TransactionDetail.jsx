@@ -121,6 +121,9 @@ const TransactionDetail = () => {
           {item.nama_produk || `Produk ID: ${item.produk_id}`}
         </h2>
         <p className="text-sm text-gray-500 mt-1">
+          <span className="font-medium">{toko}</span>
+        </p>
+        <p className="text-sm text-gray-500 mt-1">
           Quantity: <span className="font-medium">{item.quantity}</span>
         </p>
         <p className="text-sm text-gray-500">
