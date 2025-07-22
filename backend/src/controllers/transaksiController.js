@@ -73,7 +73,7 @@ export const konfirmasiTransaksi = async (req, res) => {
       `INSERT INTO transaksis 
         (kode_transaksi, pembeli_id, toko_id, payment_method, total, status, tanggal_bayar, created_at, updated_at) 
        VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW(), NOW())`,
-      [order_id, req.user.id, toko_id, payment_type, total, "paid"]
+      [order_id, req.user.id, toko_id, payment_type, total, "Paid"]
     );
 
     const transaksi_id = result.insertId;
@@ -278,9 +278,9 @@ export const updateStatusByPenjual = async (req, res) => {
 
   const [transaksi] = await db.query("SELECT * FROM transaksis WHERE id = ?", [id]);
   if (!transaksi.length) return res.status(404).json({ message: "Transaksi not found" });
-  if (transaksi[0].status !== "paid") return res.status(400).json({ message: "Status must be 'paid'" });
+  if (transaksi[0].status !== "Paid") return res.status(400).json({ message: "Status must be 'Paid'" });
 
-  await db.query("UPDATE transaksis SET status = 'proses' WHERE id = ?", [id]);
+  await db.query("UPDATE transaksis SET status = 'Proses' WHERE id = ?", [id]);
   res.json({ message: "Status updated to PROSES" });
 };
 
@@ -290,9 +290,9 @@ export const updateStatusByPembeli = async (req, res) => {
 
   const [transaksi] = await db.query("SELECT * FROM transaksis WHERE id = ? AND pembeli_id = ?", [id, req.user.id]);
   if (!transaksi.length) return res.status(404).json({ message: "Transaksi not found or unauthorized" });
-  if (transaksi[0].status !== "dikirim") return res.status(400).json({ message: "Status must be 'dikirim'" });
+  if (transaksi[0].status !== "Dikirim") return res.status(400).json({ message: "Status must be 'dikirim'" });
 
-  await db.query("UPDATE transaksis SET status = 'diterima' WHERE id = ?", [id]);
+  await db.query("UPDATE transaksis SET status = 'Diterima' WHERE id = ?", [id]);
   res.json({ message: "Status updated to DITERIMA" });
 };
 
@@ -300,7 +300,7 @@ export const updateTransaksiStatus = async (req, res) => {
   const { id } = req.params; // kode_transaksi
   const { status } = req.body;
   
-  const allowedStatuses = ["pending", "paid", "proses", "dikirim", "diterima", "selesai"];
+  const allowedStatuses = ["Pending", "Paid", "Proses", "Dikirim", "Diterima", "Selesai"];
   if (!allowedStatuses.includes(status)) {
     return res.status(400).json({ message: "Status tidak valid" });
   }

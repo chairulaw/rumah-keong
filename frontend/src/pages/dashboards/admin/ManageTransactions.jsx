@@ -1,5 +1,22 @@
 import React, { useState } from "react";
 
+const statusOptions = [
+  "Pending",
+  "Paid",
+  "Proses",
+  "Dikirim",
+  "Diterima",
+  "Selesai"
+]
+
+const statusColors = {
+    pending: "bg-gray-400",
+paid: "bg-yellow-500",
+proses: "bg-blue-400",
+dikirim: "bg-indigo-500",
+diterima: "bg-teal-500",
+selesai: "bg-green-500",
+}
 const ManageTransactions = () => {
   const [transactions] = useState([
     { id: 1, user: "Budi", total: 120000, status: "selesai", tanggal: "2025-07-10" },

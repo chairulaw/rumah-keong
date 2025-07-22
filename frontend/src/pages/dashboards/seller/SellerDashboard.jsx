@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   ShoppingBagIcon,
   ClipboardDocumentListIcon,
@@ -6,30 +6,67 @@ import {
   CurrencyDollarIcon,
 } from "@heroicons/react/24/outline";
 
-
 const SellerDashboard = () => {
+  const [data, setData] = useState({
+    total_produk: 0,
+    total_penjualan: 0,
+    jumlah_pembeli: 0,
+    total_pendapatan: 0,
+  });
+
+useEffect(() => {
+  const fetchDashboard = async () => {
+    try {
+      const storedToken = localStorage.getItem("token");
+      if (!storedToken) {
+        console.warn("Token tidak ditemukan di localStorage");
+        return;
+      }
+
+      const response = await fetch("http://localhost:3000/api/toko/my-dashboard", {
+        headers: {
+          Authorization: `Bearer ${storedToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        const err = await response.json();
+        throw new Error(err.message || "Gagal ambil data");
+      }
+
+      const result = await response.json();
+      setData(result);
+    } catch (error) {
+      console.error("Gagal ambil dashboard:", error.message);
+    }
+  };
+
+  fetchDashboard();
+}, []);
+
   const metrics = [
     {
       label: "Total Produk",
-      value: 18,
+      value: data.total_produk,
       icon: <ShoppingBagIcon className="w-6 h-6 text-emerald-600" />,
       bg: "bg-indigo-500",
     },
     {
       label: "Total Penjualan",
-      value: 43,
+      value: data.total_penjualan,
       icon: <ClipboardDocumentListIcon className="w-6 h-6 text-blue-600" />,
       bg: "bg-blue-500",
     },
     {
       label: "Jumlah Pembeli",
-      value: 12,
+      value: data.jumlah_pembeli,
       icon: <UserGroupIcon className="w-6 h-6 text-orange-600" />,
       bg: "bg-teal-500",
     },
     {
       label: "Total Pendapatan",
-      value: "Rp 12.750.000",
+      value: `Rp ${Number(data.total_pendapatan).toLocaleString("id-ID")}`,
       icon: <CurrencyDollarIcon className="w-6 h-6 text-green-600" />,
       bg: "bg-green-500",
     },
@@ -39,7 +76,7 @@ const SellerDashboard = () => {
     <div className="flex justify-center mt-20 px-6">
       <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-7xl">
         <h2 className="text-3xl font-bold text-gray-800 text-center mb-8">
-          🧾 Dashboard Penjualan Toko: Rumah Keong 
+          🧾 Dashboard Penjualan Toko: Rumah Keong
         </h2>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -63,7 +100,7 @@ const SellerDashboard = () => {
           ))}
         </div>
 
-        {/* Tambahan bisa disisipkan di sini nanti (grafik, notifikasi, dll) */}
+        {/* Section tambahan: grafik, list transaksi, notifikasi, dll */}
       </div>
     </div>
   );

@@ -4,6 +4,7 @@ import {
   getAllToko,
   getSalesByTokoId,
   getTokoById,
+  getTokoDashboard,
   getMyToko,
   updateToko
 } from "../controllers/tokoController.js";
@@ -16,7 +17,9 @@ router.get("/me", protect, getMyToko);
 router.put("/me", protect, upload.single("logo_toko"), updateToko);
 
 router.get("/", getAllToko);
+router.get("/my-dashboard", protect, getTokoDashboard);
 router.get("/my-sales", protect, getSalesByTokoId);
 router.get("/:id", getTokoById);
+
 
 export default router;

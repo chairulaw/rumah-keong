@@ -13,7 +13,7 @@ const SidebarSeller = () => {
   ];
 
   return (
-    <div className="w-1/5 h-screen px-5 py-20 bg-white">
+    <div className="w-1/5 min-h-screen px-5 py-20 bg-white">
       {sidebarLeft.map((item, index) => (
         <div
           key={index}

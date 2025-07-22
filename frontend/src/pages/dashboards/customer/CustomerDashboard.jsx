@@ -17,99 +17,7 @@ const CustomerDashboard = () => {
 
   const token = localStorage.getItem("token");
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleImageChange = (e) => {
-    if (e.target.files[0]) {
-      setProfileImage(URL.createObjectURL(e.target.files[0]));
-      setImageFile(e.target.files[0]);
-    }
-  };
-
-  const handleSave = async (e) => {
-    e.preventDefault();
-
-    try {
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      };
-
-      if (form.name)
-        await fetch(`http://localhost:3000/api/auth/update-name/0`, {
-          method: "PUT",
-          headers,
-          body: JSON.stringify({ name: form.name }),
-        });
-
-      if (form.no_hp)
-        await fetch(`http://localhost:3000/api/auth/update-nohp`, {
-          method: "PUT",
-          headers,
-          body: JSON.stringify({ no_hp: form.no_hp }),
-        });
-
-      if (form.alamat)
-        await fetch(`http://localhost:3000/api/auth/update-alamat/0`, {
-          method: "PUT",
-          headers,
-          body: JSON.stringify({ alamat: form.alamat }),
-        });
-
-if (imageFile) {
-  const formData = new FormData();
-formData.append("foto_profile", imageFile);
-
-await fetch(`http://localhost:3000/api/auth/profile-image`, {
-  method: "POST", // Sesuai dengan router backend
-  headers: {
-    Authorization: `Bearer ${token}`,
-    // Jangan set Content-Type, biarkan browser yang atur untuk FormData
-  },
-  body: formData,
-});
-}
-
-      if (form.currentPassword && form.newPassword)
-        await fetch(`http://localhost:3000/api/auth/update-password/0`, {
-          method: "PUT",
-          headers,
-          body: JSON.stringify({
-            currentPassword: form.currentPassword,
-            newPassword: form.newPassword,
-          }),
-        });
-
-      // Jika ada imageFile, upload terakhir setelah data lain
-if (imageFile) {
-  const formData = new FormData();
-  formData.append("foto_profile", imageFile);
-
-  await fetch(`http://localhost:3000/api/auth/profile-image`, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
-  });
-}
-
-
-      toast.success("Berhasil Update Profil!", {
-              position: "top-right",
-              autoClose: 1500,
-            });
-    } catch (err) {
-      toast.error("Gagal Update Profil!", {
-              position: "top-right",
-              autoClose: 1500,
-            });
-    }
-  };
-useEffect(() => {
+  useEffect(() => {
   const fetchProfile = async () => {
     try {
       const res = await fetch("http://localhost:3000/api/auth/profile", {
@@ -143,7 +51,124 @@ if (data.foto_profile) {
   fetchProfile();
 }, []);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      setProfileImage(URL.createObjectURL(e.target.files[0]));
+      setImageFile(e.target.files[0]);
+    }
+  };
+
+const handleSave = async (e) => {
+  e.preventDefault();
+
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    };
+
+    if (form.name) {
+      const res = await fetch(`http://localhost:3000/api/auth/update-name/0`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({ name: form.name }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Gagal update nama");
+      }
+    }
+
+    if (form.no_hp) {
+      const res = await fetch(`http://localhost:3000/api/auth/update-nohp`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({ no_hp: form.no_hp }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Gagal update no_hp");
+      }
+    }
+
+    if (form.alamat) {
+      const res = await fetch(`http://localhost:3000/api/auth/update-alamat/0`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({ alamat: form.alamat }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Gagal update alamat");
+      }
+    }
+
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("foto_profile", imageFile);
+
+      const res = await fetch(`http://localhost:3000/api/auth/profile-image`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Gagal upload foto profil");
+      }
+    }
+
+    if (form.currentPassword && form.newPassword) {
+      const res = await fetch(`http://localhost:3000/api/auth/update-password`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({
+          currentPassword: form.currentPassword,
+          newPassword: form.newPassword,
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Gagal update password");
+      }
+    }
+
+    // Ulangi upload gambar jika dibutuhkan dua kali
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("foto_profile", imageFile);
+
+      const res = await fetch(`http://localhost:3000/api/auth/profile-image`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Gagal upload ulang foto profil");
+      }
+    }
+
+    toast.success("Berhasil Update Profil!", {
+      position: "top-right",
+      autoClose: 1500,
+    });
+  } catch (err) {
+    toast.error(`Gagal Update Profil: ${err.message}`, {
+      position: "top-right",
+      autoClose: 2500,
+    });
+  }
+};
 
 
   return (

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { data } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const SellerProfile = () => {
   const [profileImage, setProfileImage] = useState(null);
-  const [file, setFile] = useState(null); // simpan file asli
+  const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({
     nama: "",
     alamat: "",
@@ -37,7 +38,7 @@ const SellerProfile = () => {
         });
       } catch (err) {
         console.error(err);
-        alert("Gagal mengambil data toko. Silakan login ulang.");
+        toast.error("Gagal mengambil data toko. Silakan login ulang.");
       }
     };
 
@@ -47,8 +48,8 @@ const SellerProfile = () => {
   const handleImageChange = (e) => {
     const uploadedFile = e.target.files[0];
     if (uploadedFile) {
-      setFile(uploadedFile); // simpan file untuk upload
-      setProfileImage(URL.createObjectURL(uploadedFile)); // preview
+      setFile(uploadedFile);
+      setProfileImage(URL.createObjectURL(uploadedFile));
     }
   };
 
@@ -60,40 +61,44 @@ const SellerProfile = () => {
     }));
   };
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const form = new FormData();
-  form.append("nama", formData.nama);
-  form.append("alamat", formData.alamat);
-  form.append("deskripsi", formData.deskripsi);
-  form.append("no_hp", formData.no_hp);
-  form.append("email", formData.email);
-  if (file) {
-    form.append("logo_toko", file); // file asli, bukan preview URL
-  }
+    const form = new FormData();
+    form.append("nama", formData.nama);
+    form.append("alamat", formData.alamat);
+    form.append("deskripsi", formData.deskripsi);
+    form.append("no_hp", formData.no_hp);
+    form.append("email", formData.email);
+    if (file) {
+      form.append("logo_toko", file);
+    }
 
-  try {
-    const res = await fetch("http://localhost:3000/api/toko/me", {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        // ⚠️ Jangan tambahkan Content-Type, biarkan browser handle multipart
-      },
-      body: form, // ← ini penting
-    });
+    try {
+      const res = await fetch("http://localhost:3000/api/toko/me", {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: form,
+      });
 
-    if (!res.ok) throw new Error("Gagal update toko");
+      if (!res.ok) throw new Error("Gagal update toko");
 
-    const data = await res.json();
-    alert("Perubahan berhasil disimpan");
-    console.log(data);
-  } catch (err) {
-    console.error(err);
-    alert("Gagal menyimpan perubahan.");
-  }
-};
-
+      const data = await res.json();
+      toast.success("Perubahan berhasil disimpan!", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+      console.log(data);
+    } catch (err) {
+      console.error(err);
+      toast.error("Gagal menyimpan perubahan.", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+    }
+  };
 
   return (
     <div className="h-fit flex justify-center mt-20">
@@ -102,7 +107,6 @@ const handleSubmit = async (e) => {
           Hi, {formData?.nama || "User"}
         </h2>
 
-        {/* Foto Profil */}
         <div className="flex flex-col items-center mb-6">
           <div className="relative w-32 h-32 mb-2">
             {(profileImage || formData.logo_toko) && (
@@ -129,7 +133,6 @@ const handleSubmit = async (e) => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Nama dan No HP */}
           <div className="flex gap-4">
             <input
               name="nama"
@@ -149,7 +152,6 @@ const handleSubmit = async (e) => {
             />
           </div>
 
-          {/* Email dan Password */}
           <div className="flex gap-4">
             <input
               name="email"
@@ -168,7 +170,6 @@ const handleSubmit = async (e) => {
             />
           </div>
 
-          {/* Alamat dan Deskripsi */}
           <textarea
             name="alamat"
             placeholder="Alamat Toko"
@@ -184,7 +185,6 @@ const handleSubmit = async (e) => {
             className="w-full border-b border-gray-300 focus:outline-none focus:border-black py-2 resize-y min-h-[80px]"
           />
 
-          {/* Tombol Aksi */}
           <div className="flex gap-4 mt-5 justify-between">
             <button
               type="submit"
@@ -206,6 +206,9 @@ const handleSubmit = async (e) => {
           </div>
         </form>
       </div>
+
+      {/* Toast notification container */}
+      <ToastContainer position="top-right" autoClose={2500} />
     </div>
   );
 };

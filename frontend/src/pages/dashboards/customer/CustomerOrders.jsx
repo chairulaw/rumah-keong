@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 
 const statusColors = {
-  pending: "bg-gray-400",
-  paid: "bg-green-500",
-  proses: "bg-blue-400",
-  dikirim: "bg-indigo-500",
-  diterima: "bg-teal-500",
-  selesai: "bg-green-500",
+  Pending: "bg-gray-400",
+  Paid: "bg-green-500",
+  Proses: "bg-blue-400",
+  Dikirim: "bg-indigo-500",
+  Diterima: "bg-teal-500",
+  Selesai: "bg-green-500",
 };
 
 const CustomerOrders = () => {

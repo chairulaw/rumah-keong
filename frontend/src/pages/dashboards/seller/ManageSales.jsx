@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
 
 const statusOptions = [
-  "pending",
-  "paid",
-  "proses",
-  "dikirim",
-  "diterima",
-  "selesai",
+    "Pending",
+    "Paid",
+    "Proses",
+    "Dikirim",
+    "Diterima",
+    "Selesai"
 ];
 
 const statusColors = {
-  pending: "bg-gray-400",
-  paid: "bg-yellow-500",
-  proses: "bg-blue-400",
-  dikirim: "bg-indigo-500",
-  diterima: "bg-teal-500",
-  selesai: "bg-green-500",
+  Pending: "bg-gray-400",
+  Paid: "bg-yellow-500",
+  Proses: "bg-blue-400",
+  Dikirim: "bg-indigo-500",
+  Diterima: "bg-teal-500",
+  Selesai: "bg-green-500",
 };
 
 const ManageSales = () => {

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ManageProducts = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,7 +17,6 @@ const ManageProducts = () => {
   const token = localStorage.getItem("token");
   const [tokoId, setTokoId] = useState(null);
 
-  // Ambil data toko milik user
   const fetchTokoId = async () => {
     try {
       const res = await axios.get("http://localhost:3000/api/toko/me", {
@@ -23,11 +24,10 @@ const ManageProducts = () => {
       });
       setTokoId(res.data.id);
     } catch (err) {
-      console.error("Gagal mendapatkan toko", err);
+      toast.error("Gagal mendapatkan data toko");
     }
   };
 
-  // Ambil produk milik toko user
   const fetchProducts = async () => {
     if (!tokoId) return;
     try {
@@ -36,7 +36,7 @@ const ManageProducts = () => {
       });
       setProducts(res.data);
     } catch (err) {
-      console.error("Gagal fetch produk", err);
+      toast.error("Gagal memuat produk");
     }
   };
 
@@ -45,32 +45,20 @@ const ManageProducts = () => {
   }, []);
 
   useEffect(() => {
-    if (tokoId) {
-      fetchProducts();
-    }
+    if (tokoId) fetchProducts();
   }, [tokoId]);
 
   const handleImageChange = (e) => {
-    setNewProduct({
-      ...newProduct,
-      images: Array.from(e.target.files),
-    });
+    setNewProduct({ ...newProduct, images: Array.from(e.target.files) });
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     if (name === "price") {
       const cleaned = value.replace(/[^\d]/g, "");
-      setNewProduct({
-        ...newProduct,
-        price: formatRupiah(cleaned),
-      });
+      setNewProduct({ ...newProduct, price: formatRupiah(cleaned) });
     } else {
-      setNewProduct({
-        ...newProduct,
-        [name]: value,
-      });
+      setNewProduct({ ...newProduct, [name]: value });
     }
   };
 
@@ -83,20 +71,18 @@ const ManageProducts = () => {
     form.append("harga", newProduct.price.replace(/\./g, "").replace(/,/g, ""));
     form.append("stok", newProduct.stock);
     for (const img of newProduct.images) {
-      form.append("gambarProduk", img); // field name sesuai multer upload.array
+      form.append("gambarProduk", img);
     }
 
     try {
       const res = await fetch("http://localhost:3000/api/produk", {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: form,
       });
 
       if (res.ok) {
-        alert("Produk berhasil ditambahkan!");
+        toast.success("Produk berhasil ditambahkan!");
         setIsOpen(false);
         setNewProduct({
           name: "",
@@ -105,13 +91,12 @@ const ManageProducts = () => {
           stock: "",
           images: [],
         });
-        fetchProducts(); // Refresh data produk
+        fetchProducts();
       } else {
-        alert("Gagal tambah produk");
+        toast.error("Gagal menambahkan produk");
       }
     } catch (err) {
-      console.error(err);
-      alert("Error saat tambah produk");
+      toast.error("Terjadi kesalahan saat menambahkan produk");
     }
   };
 
@@ -123,11 +108,10 @@ const ManageProducts = () => {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
-      alert("Produk dihapus");
+      toast.success("Produk berhasil dihapus");
       fetchProducts();
     } catch (err) {
-      console.error(err);
-      alert("Gagal menghapus produk");
+      toast.error("Gagal menghapus produk");
     }
   };
 
@@ -143,6 +127,7 @@ const ManageProducts = () => {
 
   return (
     <div className="flex justify-center mt-20 px-6">
+      <ToastContainer position="top-right" autoClose={1500} />
       <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-7xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold text-gray-800">📦 Produk Saya</h2>
@@ -206,7 +191,6 @@ const ManageProducts = () => {
           </table>
         </div>
 
-        {/* Modal Tambah Produk */}
         {isOpen && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
             <div className="bg-white rounded-lg shadow-lg w-full max-w-2xl p-6 relative">

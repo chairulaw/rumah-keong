@@ -172,42 +172,45 @@ export const updateNoHp = async (req, res) => {
   res.json({ message: "No HP updated" });
 };
 
-
 export const updatePassword = async (req, res) => {
-  const { currentPassword, newPassword } = req.body;  
-    const { id } = req.user;  
+  const { currentPassword, newPassword } = req.body;
+  const { id } = req.user;
 
-    if (!currentPassword || !newPassword || !id) {
-        return res.status(400).json({ message: 'Current password, new password, or user ID is missing' });
+  if (!currentPassword || !newPassword) {
+    return res.status(400).json({ message: 'Harap isi password lama dan baru.' });
+  }
+
+  try {
+    console.log("User ID dari token:", id);
+
+    const [userResult] = await db.query('SELECT * FROM users WHERE id = ?', [id]);
+
+    if (userResult.length === 0) {
+      return res.status(404).json({ message: 'User tidak ditemukan.' });
     }
 
-    try {
-      const userResult = await query('SELECT * FROM users WHERE id = ?', [id]);
-      console.log('Update result:', userResult);
+    const user = userResult[0];
+    const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
 
-        if (userResult.length === 0) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-
-        const user = userResult[0];  
-
-     
-        const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
-        if (!isPasswordValid) {
-            return res.status(400).json({ message: 'Current password is incorrect' });
-        }
-
-        const hashedPassword = await bcrypt.hash(newPassword, 10);
-        const result = await query('UPDATE users SET password = ? WHERE id = ?', [hashedPassword, id]);
-        console.log('Update result:', result);
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Failed to update password' });
-        }
-
-        res.status(200).json({ message: 'Password updated successfully' });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Failed to update password', error: err.message });
+    if (!isPasswordValid) {
+      return res.status(400).json({ message: 'Password lama salah.' });
     }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    const [updateResult] = await db.query(
+      'UPDATE users SET password = ? WHERE id = ?',
+      [hashedPassword, id]
+    );
+
+    if (updateResult.affectedRows === 0) {
+      return res.status(500).json({ message: 'Gagal mengubah password.' });
+    }
+
+    res.status(200).json({ message: 'Password berhasil diperbarui.' });
+  } catch (err) {
+    console.error('Error update password:', err);
+    res.status(500).json({ message: 'Terjadi kesalahan server.', error: err.message });
+  }
 };
+
