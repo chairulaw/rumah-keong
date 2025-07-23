@@ -45,8 +45,6 @@ export const getSnapToken = async (req, res) => {
   }
 };
 
-
-
 export const konfirmasiTransaksi = async (req, res) => {
   try {
     const { produk_list, order_id, payment_type, total } = req.body;
@@ -97,7 +95,6 @@ export const konfirmasiTransaksi = async (req, res) => {
   }
 };
 
-
 export const getTransactionByKode = async (req, res) => {
   const { kode_transaksi } = req.params;
 
@@ -129,38 +126,56 @@ export const getTransactionByKode = async (req, res) => {
     });
   } catch (error) {
     console.error("Gagal mengambil data transaksi:", error);
-    res.status(500).json({ message: "Gagal mengambil data transaksi", error: error.message });
+    res
+      .status(500)
+      .json({
+        message: "Gagal mengambil data transaksi",
+        error: error.message,
+      });
   }
 };
 
-
 export const getMyTransaksiPembeli = async (req, res) => {
-    const [transaksis] = await db.query("SELECT t.*, tk.nama AS nama_toko FROM transaksis t JOIN tokos tk ON t.toko_id = tk.id WHERE t.pembeli_id = ? ORDER BY t.created_at DESC", [req.user.id]);
-    
-    for (let transaksi of transaksis) {
-        const [details] = await db.query("SELECT dt.*, p.nama AS nama_produk FROM detail_transaksis dt JOIN produk p ON dt.produk_id = p.id WHERE dt.transaksi_id = ?", [transaksi.id]);
-        transaksi.produk_list = details;
-    }
-    
-    res.json(transaksis);
+  const [transaksis] = await db.query(
+    "SELECT t.*, tk.nama AS nama_toko FROM transaksis t JOIN tokos tk ON t.toko_id = tk.id WHERE t.pembeli_id = ? ORDER BY t.created_at DESC",
+    [req.user.id]
+  );
+
+  for (let transaksi of transaksis) {
+    const [details] = await db.query(
+      "SELECT dt.*, p.nama AS nama_produk FROM detail_transaksis dt JOIN produk p ON dt.produk_id = p.id WHERE dt.transaksi_id = ?",
+      [transaksi.id]
+    );
+    transaksi.produk_list = details;
+  }
+
+  res.json(transaksis);
 };
 
 // Penjual: See all transactions for their toko
 export const getMyTokoTransaksi = async (req, res) => {
-  const [toko] = await db.query("SELECT id FROM tokos WHERE owner_id = ?", [req.user.id]);
+  const [toko] = await db.query("SELECT id FROM tokos WHERE owner_id = ?", [
+    req.user.id,
+  ]);
   if (!toko.length) return res.status(404).json({ message: "Toko not found" });
 
-  const [transaksis] = await db.query(`
+  const [transaksis] = await db.query(
+    `
     SELECT * FROM transaksis WHERE toko_id = ? ORDER BY created_at DESC
-  `, [toko[0].id]);
+  `,
+    [toko[0].id]
+  );
 
   for (let transaksi of transaksis) {
-    const [details] = await db.query(`
+    const [details] = await db.query(
+      `
       SELECT dt.*, p.nama AS nama_produk
       FROM detail_transaksis dt
       JOIN produks p ON dt.produk_id = p.id
       WHERE dt.transaksi_id = ?
-    `, [transaksi.id]);
+    `,
+      [transaksi.id]
+    );
 
     transaksi.produk_list = details;
   }
@@ -185,18 +200,21 @@ export const getInvoiceById = async (req, res) => {
 
   const transaksi = transaksiRows[0];
 
-    const [details] = await db.query(
-      `SELECT dt.*, p.nama AS nama_produk, p.gambar_produk 
+  const [details] = await db.query(
+    `SELECT dt.*, p.nama AS nama_produk, p.gambar_produk 
        FROM detail_transaksis dt
        JOIN produks p ON dt.produk_id = p.id
        WHERE dt.transaksi_id = ?`,
-      [transaksi.id]
-    );
+    [transaksi.id]
+  );
 
   res.json({
     transaksi,
     produk_list: details,
-    grand_total: details.reduce((acc, cur) => acc + parseFloat(cur.sub_total), 0),
+    grand_total: details.reduce(
+      (acc, cur) => acc + parseFloat(cur.sub_total),
+      0
+    ),
   });
 };
 
@@ -245,8 +263,6 @@ export const getInvoicesForUser = async (req, res) => {
   }
 };
 
-
-
 export const getAnalytics = async (req, res) => {
   const [byStatus] = await db.query(`
     SELECT status, COUNT(*) as total FROM transaksis GROUP BY status
@@ -276,9 +292,13 @@ export const getAnalytics = async (req, res) => {
 export const updateStatusByPenjual = async (req, res) => {
   const { id } = req.params;
 
-  const [transaksi] = await db.query("SELECT * FROM transaksis WHERE id = ?", [id]);
-  if (!transaksi.length) return res.status(404).json({ message: "Transaksi not found" });
-  if (transaksi[0].status !== "Paid") return res.status(400).json({ message: "Status must be 'Paid'" });
+  const [transaksi] = await db.query("SELECT * FROM transaksis WHERE id = ?", [
+    id,
+  ]);
+  if (!transaksi.length)
+    return res.status(404).json({ message: "Transaksi not found" });
+  if (transaksi[0].status !== "Paid")
+    return res.status(400).json({ message: "Status must be 'Paid'" });
 
   await db.query("UPDATE transaksis SET status = 'Proses' WHERE id = ?", [id]);
   res.json({ message: "Status updated to PROSES" });
@@ -288,19 +308,35 @@ export const updateStatusByPenjual = async (req, res) => {
 export const updateStatusByPembeli = async (req, res) => {
   const { id } = req.params;
 
-  const [transaksi] = await db.query("SELECT * FROM transaksis WHERE id = ? AND pembeli_id = ?", [id, req.user.id]);
-  if (!transaksi.length) return res.status(404).json({ message: "Transaksi not found or unauthorized" });
-  if (transaksi[0].status !== "Dikirim") return res.status(400).json({ message: "Status must be 'dikirim'" });
+  const [transaksi] = await db.query(
+    "SELECT * FROM transaksis WHERE id = ? AND pembeli_id = ?",
+    [id, req.user.id]
+  );
+  if (!transaksi.length)
+    return res
+      .status(404)
+      .json({ message: "Transaksi not found or unauthorized" });
+  if (transaksi[0].status !== "Dikirim")
+    return res.status(400).json({ message: "Status must be 'dikirim'" });
 
-  await db.query("UPDATE transaksis SET status = 'Diterima' WHERE id = ?", [id]);
+  await db.query("UPDATE transaksis SET status = 'Diterima' WHERE id = ?", [
+    id,
+  ]);
   res.json({ message: "Status updated to DITERIMA" });
 };
 
 export const updateTransaksiStatus = async (req, res) => {
   const { id } = req.params; // kode_transaksi
   const { status } = req.body;
-  
-  const allowedStatuses = ["Pending", "Paid", "Proses", "Dikirim", "Diterima", "Selesai"];
+
+  const allowedStatuses = [
+    "Pending",
+    "Paid",
+    "Proses",
+    "Dikirim",
+    "Diterima",
+    "Selesai",
+  ];
   if (!allowedStatuses.includes(status)) {
     return res.status(400).json({ message: "Status tidak valid" });
   }
@@ -310,11 +346,11 @@ export const updateTransaksiStatus = async (req, res) => {
       "UPDATE transaksis SET status = ? WHERE kode_transaksi = ?",
       [status, id]
     );
-    
+
     if (result.affectedRows === 0) {
       return res.status(404).json({ message: "Transaksi tidak ditemukan" });
     }
-    
+
     res.json({ message: "Status transaksi berhasil diperbarui" });
   } catch (error) {
     console.error("Update status error:", error);

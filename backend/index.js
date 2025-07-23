@@ -8,6 +8,7 @@ import produkRoutes from "./src/routes/produkRoutes.js";
 import transaksiRoutes from "./src/routes/transaksiRoutes.js";
 import detailRoutes from "./src/routes/detailRoutes.js";
 import userRoutes from "./src/routes/userRoutes.js";
+import adminRoutes from "./src/routes/adminRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -25,5 +26,7 @@ app.use("/api/produk", produkRoutes);
 app.use("/api/transaksi", transaksiRoutes);
 app.use("/api/detail", detailRoutes);
 app.use("/api/user", userRoutes);
+app.use("/api/admin", adminRoutes);
+
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

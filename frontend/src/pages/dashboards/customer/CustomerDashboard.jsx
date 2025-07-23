@@ -18,38 +18,36 @@ const CustomerDashboard = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-  const fetchProfile = async () => {
-    try {
-      const res = await fetch("http://localhost:3000/api/auth/profile", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    const fetchProfile = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/api/auth/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      if (!res.ok) throw new Error("Gagal ambil profil");
+        if (!res.ok) throw new Error("Gagal ambil profil");
 
-      const data = await res.json();
-      setForm((prev) => ({
-        ...prev,
-        name: data.nama || "",
-        no_hp: data.no_hp || "",
-        alamat: data.alamat || "",
-        email: data.email || "",
-        foto_profile: data.foto_profile || "",
-      }));
+        const data = await res.json();
+        setForm((prev) => ({
+          ...prev,
+          name: data.nama || "",
+          no_hp: data.no_hp || "",
+          alamat: data.alamat || "",
+          email: data.email || "",
+          foto_profile: data.foto_profile || "",
+        }));
 
-if (data.foto_profile) {
-  setProfileImage(`http://localhost:3000/${data.foto_profile}`);
-}
+        if (data.foto_profile) {
+          setProfileImage(`http://localhost:3000/${data.foto_profile}`);
+        }
+      } catch (err) {
+        console.error("Gagal fetch profil:", err);
+      }
+    };
 
-
-    } catch (err) {
-      console.error("Gagal fetch profil:", err);
-    }
-  };
-
-  fetchProfile();
-}, []);
+    fetchProfile();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -63,117 +61,130 @@ if (data.foto_profile) {
     }
   };
 
-const handleSave = async (e) => {
-  e.preventDefault();
+  const handleSave = async (e) => {
+    e.preventDefault();
 
-  try {
-    const headers = {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    };
+    try {
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      };
 
-    if (form.name) {
-      const res = await fetch(`http://localhost:3000/api/auth/update-name/0`, {
-        method: "PUT",
-        headers,
-        body: JSON.stringify({ name: form.name }),
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Gagal update nama");
+      if (form.name) {
+        const res = await fetch(
+          `http://localhost:3000/api/auth/update-name/0`,
+          {
+            method: "PUT",
+            headers,
+            body: JSON.stringify({ name: form.name }),
+          }
+        );
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || "Gagal update nama");
+        }
       }
-    }
 
-    if (form.no_hp) {
-      const res = await fetch(`http://localhost:3000/api/auth/update-nohp`, {
-        method: "PUT",
-        headers,
-        body: JSON.stringify({ no_hp: form.no_hp }),
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Gagal update no_hp");
+      if (form.no_hp) {
+        const res = await fetch(`http://localhost:3000/api/auth/update-nohp`, {
+          method: "PUT",
+          headers,
+          body: JSON.stringify({ no_hp: form.no_hp }),
+        });
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || "Gagal update no_hp");
+        }
       }
-    }
 
-    if (form.alamat) {
-      const res = await fetch(`http://localhost:3000/api/auth/update-alamat/0`, {
-        method: "PUT",
-        headers,
-        body: JSON.stringify({ alamat: form.alamat }),
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Gagal update alamat");
+      if (form.alamat) {
+        const res = await fetch(
+          `http://localhost:3000/api/auth/update-alamat/0`,
+          {
+            method: "PUT",
+            headers,
+            body: JSON.stringify({ alamat: form.alamat }),
+          }
+        );
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || "Gagal update alamat");
+        }
       }
-    }
 
-    if (imageFile) {
-      const formData = new FormData();
-      formData.append("foto_profile", imageFile);
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append("foto_profile", imageFile);
 
-      const res = await fetch(`http://localhost:3000/api/auth/profile-image`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Gagal upload foto profil");
+        const res = await fetch(
+          `http://localhost:3000/api/auth/profile-image`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+          }
+        );
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || "Gagal upload foto profil");
+        }
       }
-    }
 
-    if (form.currentPassword && form.newPassword) {
-      const res = await fetch(`http://localhost:3000/api/auth/update-password`, {
-        method: "PUT",
-        headers,
-        body: JSON.stringify({
-          currentPassword: form.currentPassword,
-          newPassword: form.newPassword,
-        }),
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Gagal update password");
+      if (form.currentPassword && form.newPassword) {
+        const res = await fetch(
+          `http://localhost:3000/api/auth/update-password`,
+          {
+            method: "PUT",
+            headers,
+            body: JSON.stringify({
+              currentPassword: form.currentPassword,
+              newPassword: form.newPassword,
+            }),
+          }
+        );
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || "Gagal update password");
+        }
       }
-    }
 
-    // Ulangi upload gambar jika dibutuhkan dua kali
-    if (imageFile) {
-      const formData = new FormData();
-      formData.append("foto_profile", imageFile);
+      // Ulangi upload gambar jika dibutuhkan dua kali
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append("foto_profile", imageFile);
 
-      const res = await fetch(`http://localhost:3000/api/auth/profile-image`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
-      });
-      if (!res.ok) {
-        const err = await res.json();
-        throw new Error(err.message || "Gagal upload ulang foto profil");
+        const res = await fetch(
+          `http://localhost:3000/api/auth/profile-image`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+          }
+        );
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.message || "Gagal upload ulang foto profil");
+        }
       }
+
+      toast.success("Berhasil Update Profil!", {
+        position: "top-right",
+        autoClose: 1500,
+      });
+    } catch (err) {
+      toast.error(`Gagal Update Profil: ${err.message}`, {
+        position: "top-right",
+        autoClose: 2500,
+      });
     }
-
-    toast.success("Berhasil Update Profil!", {
-      position: "top-right",
-      autoClose: 1500,
-    });
-  } catch (err) {
-    toast.error(`Gagal Update Profil: ${err.message}`, {
-      position: "top-right",
-      autoClose: 2500,
-    });
-  }
-};
-
+  };
 
   return (
     <div className="h-fit flex justify-center mt-20">
-
       <ToastContainer />
       <div className="bg-white shadow-md p-8 rounded-md w-full max-w-7xl">
         <h2 className="text-2xl font-semibold text-center mb-6">

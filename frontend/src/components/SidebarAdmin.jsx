@@ -26,7 +26,9 @@ const SidebarAdmin = () => {
         <div
           key={index}
           className={`px-4 py-2 hover:bg-gray-100 cursor-pointer border-b mb-3 ${
-            location.pathname === item.path ? "font-semibold text-black" : "text-gray-700"
+            location.pathname === item.path
+              ? "font-semibold text-black"
+              : "text-gray-700"
           }`}
           onClick={() => {
             if (item.isLogout) {

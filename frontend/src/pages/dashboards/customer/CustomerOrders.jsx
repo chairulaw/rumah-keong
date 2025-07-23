@@ -54,8 +54,14 @@ const CustomerOrders = () => {
             </thead>
             <tbody>
               {sales.map((sale) => {
-                const totalQty = sale.produk_list?.reduce((acc, item) => acc + item.quantity, 0);
-                const totalHarga = sale.produk_list?.reduce((acc, item) => acc + item.sub_total, 0);
+                const totalQty = sale.produk_list?.reduce(
+                  (acc, item) => acc + item.quantity,
+                  0
+                );
+                const totalHarga = sale.produk_list?.reduce(
+                  (acc, item) => acc + item.sub_total,
+                  0
+                );
 
                 return (
                   <tr
@@ -71,10 +77,14 @@ const CustomerOrders = () => {
                       ))}
                     </td>
                     <td className="px-4 py-3 text-center">{totalQty}</td>
-                    <td className="px-4 py-3">Rp {totalHarga?.toLocaleString()}</td>
+                    <td className="px-4 py-3">
+                      Rp {totalHarga?.toLocaleString()}
+                    </td>
                     <td className="px-4 py-3">
                       <span
-                        className={`text-white text-xs font-medium px-3 py-1 rounded ${statusColors[sale.status]}`}
+                        className={`text-white text-xs font-medium px-3 py-1 rounded ${
+                          statusColors[sale.status]
+                        }`}
                       >
                         {sale.status}
                       </span>

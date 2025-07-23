@@ -31,9 +31,12 @@ const ManageProducts = () => {
   const fetchProducts = async () => {
     if (!tokoId) return;
     try {
-      const res = await axios.get(`http://localhost:3000/api/produk/toko/${tokoId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        `http://localhost:3000/api/produk/toko/${tokoId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setProducts(res.data);
     } catch (err) {
       toast.error("Gagal memuat produk");
@@ -154,7 +157,10 @@ const ManageProducts = () => {
             </thead>
             <tbody>
               {products.map((product, index) => (
-                <tr key={product.id} className="border-b hover:bg-gray-50 text-sm text-gray-700">
+                <tr
+                  key={product.id}
+                  className="border-b hover:bg-gray-50 text-sm text-gray-700"
+                >
                   <td className="px-4 py-3">{index + 1}</td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-2">

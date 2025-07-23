@@ -8,17 +8,16 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-const handleBuyNow = () => {
-  navigate("/checkout", {
-    state: {
-      product,
-      quantity,
-    },
-  });
-};
-
+  const handleBuyNow = () => {
+    navigate("/checkout", {
+      state: {
+        product,
+        quantity,
+      },
+    });
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -69,26 +68,38 @@ const handleBuyNow = () => {
 
           {/* Informasi Produk */}
           <div className="space-y-6">
-            <h1 className="text-4xl font-semibold tracking-tight">{product.nama}</h1>
+            <h1 className="text-4xl font-semibold tracking-tight">
+              {product.nama}
+            </h1>
             <p className="text-2xl font-medium text-green-800">
               IDR {parseInt(product.harga).toLocaleString("id-ID")}
             </p>
 
-            <p className="text-sm text-gray-500">Stok: {product.stok || "Tersedia"}</p>
+            <p className="text-sm text-gray-500">
+              Stok: {product.stok || "Tersedia"}
+            </p>
 
             <div className="border-t border-gray-300 pt-6 space-y-4">
               <h2 className="text-lg font-semibold">Product Description</h2>
-              <p className="text-gray-600 leading-relaxed">{product.deskripsi}</p>
+              <p className="text-gray-600 leading-relaxed">
+                {product.deskripsi}
+              </p>
 
               <div className="pt-4 space-y-1">
                 <h3 className="font-medium">Kategori:</h3>
-                <p className="text-gray-500">{product.kategori || "Hiasan atau Aksesoris"}</p>
+                <p className="text-gray-500">
+                  {product.kategori || "Hiasan atau Aksesoris"}
+                </p>
 
                 <h3 className="font-medium mt-4">Size & Dimension:</h3>
-                <p className="text-gray-500">Pot Diameter: 14cm • Tinggi ±30cm</p>
+                <p className="text-gray-500">
+                  Pot Diameter: 14cm • Tinggi ±30cm
+                </p>
 
                 <h3 className="font-medium mt-4">Perawatan:</h3>
-                <p className="text-gray-500">Cukup dibersihkan jika sudah mulai kotor.</p>
+                <p className="text-gray-500">
+                  Cukup dibersihkan jika sudah mulai kotor.
+                </p>
               </div>
             </div>
 
@@ -104,7 +115,10 @@ const handleBuyNow = () => {
                 />
               </div>
 
-              <button onClick={handleBuyNow} className="w-full md:w-auto px-6 py-3 bg-black cursor-pointer text-white rounded-full hover:bg-gray-800 transition">
+              <button
+                onClick={handleBuyNow}
+                className="w-full md:w-auto px-6 py-3 bg-black cursor-pointer text-white rounded-full hover:bg-gray-800 transition"
+              >
                 Beli Sekarang
               </button>
             </div>
@@ -119,11 +133,16 @@ const handleBuyNow = () => {
           </div>
           <div>
             <h4 className="font-medium text-black mb-2">Perawatan</h4>
-            <p>Instruksi perawatan tanaman akan disertakan dalam paket pembelian.</p>
+            <p>
+              Instruksi perawatan tanaman akan disertakan dalam paket pembelian.
+            </p>
           </div>
           <div>
             <h4 className="font-medium text-black mb-2">Garansi</h4>
-            <p>Klaim garansi 1x24 jam setelah produk diterima jika tanaman rusak atau layu saat pengiriman.</p>
+            <p>
+              Klaim garansi 1x24 jam setelah produk diterima jika tanaman rusak
+              atau layu saat pengiriman.
+            </p>
           </div>
         </div>
 

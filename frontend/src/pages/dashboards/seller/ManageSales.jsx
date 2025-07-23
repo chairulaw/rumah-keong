@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 
 const statusOptions = [
-    "Pending",
-    "Paid",
-    "Proses",
-    "Dikirim",
-    "Diterima",
-    "Selesai"
+  "Pending",
+  "Paid",
+  "Proses",
+  "Dikirim",
+  "Diterima",
+  "Selesai",
 ];
 
 const statusColors = {
@@ -42,14 +42,13 @@ const ManageSales = () => {
   const handleStatusChange = async (id, newStatus) => {
     try {
       await fetch(`http://localhost:3000/api/transaksi/status/${id}`, {
-  method: "PUT",
-  headers: {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${localStorage.getItem("token")}`,
-  },
-  body: JSON.stringify({ status: newStatus }),
-});
-
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: JSON.stringify({ status: newStatus }),
+      });
 
       const updatedSales = sales.map((sale) =>
         sale.id === id ? { ...sale, status: newStatus } : sale

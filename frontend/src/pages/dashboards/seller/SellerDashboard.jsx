@@ -14,36 +14,39 @@ const SellerDashboard = () => {
     total_pendapatan: 0,
   });
 
-useEffect(() => {
-  const fetchDashboard = async () => {
-    try {
-      const storedToken = localStorage.getItem("token");
-      if (!storedToken) {
-        console.warn("Token tidak ditemukan di localStorage");
-        return;
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const storedToken = localStorage.getItem("token");
+        if (!storedToken) {
+          console.warn("Token tidak ditemukan di localStorage");
+          return;
+        }
+
+        const response = await fetch(
+          "http://localhost:3000/api/toko/my-dashboard",
+          {
+            headers: {
+              Authorization: `Bearer ${storedToken}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          const err = await response.json();
+          throw new Error(err.message || "Gagal ambil data");
+        }
+
+        const result = await response.json();
+        setData(result);
+      } catch (error) {
+        console.error("Gagal ambil dashboard:", error.message);
       }
+    };
 
-      const response = await fetch("http://localhost:3000/api/toko/my-dashboard", {
-        headers: {
-          Authorization: `Bearer ${storedToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.message || "Gagal ambil data");
-      }
-
-      const result = await response.json();
-      setData(result);
-    } catch (error) {
-      console.error("Gagal ambil dashboard:", error.message);
-    }
-  };
-
-  fetchDashboard();
-}, []);
+    fetchDashboard();
+  }, []);
 
   const metrics = [
     {

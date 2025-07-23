@@ -18,7 +18,7 @@ export const getUserProfileById = async (req, res) => {
 
 export const getAllUserProfile  = async (req, res) => {
     try {
-        const [rows] = await db.query("SELECT id, nama, email FROM users");
+        const [rows] = await db.query("SELECT id, nama, email, password, role FROM users");
         if (!rows.length) {
             return res.status(404).json({ message: "No users found" });
         }
@@ -28,3 +28,4 @@ export const getAllUserProfile  = async (req, res) => {
         res.status(500).json({ message: "Error fetching user profiles", error: error.message });
     }
 }
+

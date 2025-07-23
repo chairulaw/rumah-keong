@@ -10,21 +10,20 @@ const Header = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-  const storedUser = localStorage.getItem("user");
+    const storedUser = localStorage.getItem("user");
 
-  // Pastikan bukan null atau "undefined"
-  if (storedUser && storedUser !== "undefined") {
-    try {
-      const parsed = JSON.parse(storedUser);
-      setUser(parsed);
-    } catch (error) {
-      console.error("Error parsing user:", error);
+    // Pastikan bukan null atau "undefined"
+    if (storedUser && storedUser !== "undefined") {
+      try {
+        const parsed = JSON.parse(storedUser);
+        setUser(parsed);
+      } catch (error) {
+        console.error("Error parsing user:", error);
+      }
+    } else {
+      console.warn("No valid user found in localStorage");
     }
-  } else {
-    console.warn("No valid user found in localStorage");
-  }
-}, []);
-
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,8 +67,6 @@ const Header = () => {
     }
   };
 
-
-
   return (
     <header
       className={`fixed top-0 left-0 w-full z-50 px-6 md:px-12 lg:px-18 py-6 transition-all duration-300 transform ${
@@ -91,7 +88,10 @@ const Header = () => {
         </nav>
 
         {/* Center Logo */}
-        <Link to="/" className="flex justify-center items-center w-72 flex-shrink-0">
+        <Link
+          to="/"
+          className="flex justify-center items-center w-72 flex-shrink-0"
+        >
           <img
             src={logoKeong}
             alt="Rumah Keong Logo"

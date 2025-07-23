@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Users, ShoppingCart, UserPlus, DollarSign, BarChart2 } from "lucide-react"; // pakai lucide-react
+import axios from "axios";
+import { Users, ShoppingCart, UserPlus, DollarSign } from "lucide-react";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState({
@@ -11,38 +12,30 @@ const AdminDashboard = () => {
   });
 
   useEffect(() => {
-    const dummyUsers = [
-      { id: 1, role: "admin" },
-      { id: 2, role: "penjual" },
-      { id: 3, role: "pembeli" },
-      { id: 4, role: "penjual" },
-      { id: 5, role: "pembeli" },
-    ];
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get("http://localhost:3000/api/admin/stats");
 
-    const dummyTransactions = [
-      { id: 1, total: 100000 },
-      { id: 2, total: 250000 },
-      { id: 3, total: 175000 },
-    ];
+        // pastikan totalRevenue adalah angka
+        const cleanRevenue = Number(res.data.totalRevenue) || 0;
 
-    const totalUsers = dummyUsers.length;
-    const totalSellers = dummyUsers.filter((u) => u.role === "penjual").length;
-    const totalBuyers = dummyUsers.filter((u) => u.role === "pembeli").length;
-    const totalTransactions = dummyTransactions.length;
-    const totalRevenue = dummyTransactions.reduce((sum, trx) => sum + trx.total, 0);
+        setStats({
+          ...res.data,
+          totalRevenue: cleanRevenue,
+        });
+      } catch (error) {
+        console.error("Gagal fetch data statistik admin:", error);
+      }
+    };
 
-    setStats({
-      totalUsers,
-      totalSellers,
-      totalBuyers,
-      totalTransactions,
-      totalRevenue,
-    });
+    fetchStats();
   }, []);
 
   return (
-    <div className="py-20 px-10 h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 flex justify-center">Dashboard Admin</h1>
+    <div className="py-20 px-10 min-h-screen bg-gray-50">
+      <h1 className="text-3xl font-bold text-gray-800 mb-10 text-center">
+        Dashboard Admin
+      </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <StatCard
           title="Total Pengguna"
@@ -66,7 +59,7 @@ const AdminDashboard = () => {
         />
         <StatCard
           title="Total Pendapatan"
-          value={`Rp ${stats.totalRevenue.toLocaleString()}`}
+          value={`Rp ${stats.totalRevenue.toLocaleString("id-ID")}`}
           icon={<DollarSign className="text-green-600 w-6 h-6" />}
         />
       </div>
@@ -75,15 +68,13 @@ const AdminDashboard = () => {
 };
 
 const StatCard = ({ title, value, icon }) => (
-  <div className="bg-white p-6 rounded-2xl shadow hover:shadow-md transition border border-gray-100">
+  <div className="bg-white p-6 rounded-xl shadow hover:shadow-md transition border border-gray-200">
     <div className="flex items-center justify-between">
       <div>
         <h3 className="text-sm text-gray-500 mb-1">{title}</h3>
         <p className="text-2xl font-bold text-gray-800">{value}</p>
       </div>
-      <div className="bg-gray-100 p-2 rounded-full">
-        {icon}
-      </div>
+      <div className="bg-gray-100 p-2 rounded-full">{icon}</div>
     </div>
   </div>
 );

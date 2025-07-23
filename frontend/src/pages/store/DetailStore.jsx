@@ -87,11 +87,10 @@ const DetailStore = () => {
               >
                 <img
                   src={
-  product.gambar_produk && product.gambar_produk.length > 0
-    ? `http://localhost:3000/uploads/${product.gambar_produk[0]}`
-    : "/default-image.png"
-}
-
+                    product.gambar_produk && product.gambar_produk.length > 0
+                      ? `http://localhost:3000/uploads/${product.gambar_produk[0]}`
+                      : "/default-image.png"
+                  }
                   alt={product.nama}
                   className="w-full h-[250px] object-cover mb-4 rounded"
                 />

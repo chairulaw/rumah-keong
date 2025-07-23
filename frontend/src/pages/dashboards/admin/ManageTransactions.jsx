@@ -1,28 +1,32 @@
-import React, { useState } from "react";
-
-const statusOptions = [
-  "Pending",
-  "Paid",
-  "Proses",
-  "Dikirim",
-  "Diterima",
-  "Selesai"
-]
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const statusColors = {
-    pending: "bg-gray-400",
-paid: "bg-yellow-500",
-proses: "bg-blue-400",
-dikirim: "bg-indigo-500",
-diterima: "bg-teal-500",
-selesai: "bg-green-500",
-}
+  pending: "bg-gray-100 text-gray-700",
+  paid: "bg-yellow-100 text-yellow-700",
+  proses: "bg-blue-100 text-blue-700",
+  dikirim: "bg-indigo-100 text-indigo-700",
+  diterima: "bg-teal-100 text-teal-700",
+  selesai: "bg-green-100 text-green-700",
+};
+
 const ManageTransactions = () => {
-  const [transactions] = useState([
-    { id: 1, user: "Budi", total: 120000, status: "selesai", tanggal: "2025-07-10" },
-    { id: 2, user: "Sari", total: 75000, status: "dikirim", tanggal: "2025-07-09" },
-    { id: 3, user: "Joko", total: 56000, status: "pending", tanggal: "2025-07-08" },
-  ]);
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const res = await axios.get(
+          "http://localhost:3000/api/admin/all-transactions"
+        );
+        setTransactions(res.data);
+      } catch (error) {
+        console.error("Gagal mengambil data transaksi:", error);
+      }
+    };
+
+    fetchTransactions();
+  }, []);
 
   return (
     <div className="flex justify-center mt-20 px-6">
@@ -56,11 +60,8 @@ const ManageTransactions = () => {
                   <td className="px-4 py-3 capitalize">
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        t.status === "selesai"
-                          ? "bg-green-100 text-green-700"
-                          : t.status === "dikirim"
-                          ? "bg-yellow-100 text-yellow-700"
-                          : "bg-red-100 text-red-700"
+                        statusColors[t.status.toLowerCase()] ||
+                        "bg-red-100 text-red-700"
                       }`}
                     >
                       {t.status}

@@ -60,14 +60,17 @@ const Checkout = () => {
     ];
 
     try {
-      const snapResponse = await fetch("http://localhost:3000/api/transaksi/snap-token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ produk_list }),
-      });
+      const snapResponse = await fetch(
+        "http://localhost:3000/api/transaksi/snap-token",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ produk_list }),
+        }
+      );
 
       if (!snapResponse.ok) throw new Error("Gagal membuat Snap Token");
 
@@ -111,7 +114,9 @@ const Checkout = () => {
     <div className="flex flex-col items-center min-h-screen bg-[#f5f5f4] overflow-y-auto py-10 px-4">
       {/* Rincian Produk */}
       <div className="bg-white p-6 rounded-md shadow-md border w-full max-w-lg mb-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Rincian Produk</h2>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Rincian Produk
+        </h2>
         <div className="flex gap-4">
           <img
             src={`http://localhost:3000/uploads/${product.gambar_produk[0]}`}
@@ -130,7 +135,9 @@ const Checkout = () => {
 
       {/* Alamat Pengiriman */}
       <div className="bg-white p-6 rounded-md shadow-md border w-full max-w-lg mb-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Alamat Pengiriman</h2>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Alamat Pengiriman
+        </h2>
         <form className="space-y-4">
           {[
             { label: "Nama Lengkap", value: user?.nama },
@@ -154,11 +161,15 @@ const Checkout = () => {
 
       {/* Metode Pembayaran */}
       <div className="bg-white p-6 rounded-md shadow-md border w-full max-w-lg mb-6">
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Metode Pembayaran</h2>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          Metode Pembayaran
+        </h2>
         <div className="border border-gray-300 rounded p-4 mb-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <input type="radio" name="payment" checked readOnly />
-            <span className="text-sm font-medium text-gray-700">Payment Gateway (Mbanking, Ewallet, Qris)</span>
+            <span className="text-sm font-medium text-gray-700">
+              Payment Gateway (Mbanking, Ewallet, Qris)
+            </span>
           </div>
           <span className="text-sm font-semibold text-black">
             Total: IDR {(product.harga * quantity).toLocaleString("id-ID")}

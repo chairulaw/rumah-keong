@@ -18,7 +18,9 @@ const SidebarSeller = () => {
         <div
           key={index}
           className={`px-4 py-2 hover:bg-white cursor-pointer border-b mb-3 ${
-            location.pathname === item.path ? "font-semibold text-black" : "text-gray-700"
+            location.pathname === item.path
+              ? "font-semibold text-black"
+              : "text-gray-700"
           }`}
         >
           <Link to={item.path}>{item.name}</Link>
