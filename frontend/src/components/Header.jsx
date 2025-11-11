@@ -122,7 +122,7 @@ const Header = () => {
 
           {/* Instagram */}
           <a
-            href="https://instagram.com"
+            href="https://www.instagram.com/rumah.keongbatam/?utm_source=ig_web_button_share_sheet"
             target="_blank"
             rel="noopener noreferrer"
             className="hover:text-blue-600 transition-colors duration-200"
@@ -131,12 +131,12 @@ const Header = () => {
           </a>
 
           {/* Contact */}
-          <Link
-            to={navItemsRight[1].path}
+          <a
+            href="watswa.me/6281261558277"
             className="p-2 border text-sm rounded-full text-black hover:bg-blue-400 hover:text-white transition-colors duration-200"
           >
             {navItemsRight[1].name}
-          </Link>
+          </a>
         </nav>
       </div>
     </header>

@@ -11,6 +11,15 @@ const ProductDetail = () => {
   const navigate = useNavigate();
 
   const handleBuyNow = () => {
+
+    const token = localStorage.getItem("token");
+
+    if(!token){
+      alert("Anda harus login terlebih dahulu untuk membeli produk")
+      navigate("/login")
+      return;
+    }
+
     navigate("/checkout", {
       state: {
         product,

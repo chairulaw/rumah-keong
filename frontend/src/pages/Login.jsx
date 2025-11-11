@@ -102,12 +102,19 @@ const Login = () => {
           </button>
         </form>
 
-        <div className="flex justify-center mt-5">
+        <div className="flex justify-center mt-5 flex-col items-center gap-1">
           <Link
             to="/register"
-            className="text-sm text-gray-600 font-semibold hover:underline"
+            className="text-sm text-gray font-semibold hover:text-white hover:underline ease-in-out duration-100"
           >
             Create Account?
+          </Link>
+          <p>atau</p>
+          <Link
+            to="/"
+            className="text-sm text-gray font-semibold hover:text-white hover:underline ease-in-out duration-100"
+          >
+            Kembali ke Beranda
           </Link>
         </div>
       </div>

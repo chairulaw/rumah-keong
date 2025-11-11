@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { heroImg } from "../assets/Assets";
 import { ToastContainer, toast } from "react-toastify";
+import { Link } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
@@ -141,12 +142,21 @@ const Register = () => {
           </button>
         </form>
 
-        <p className="text-sm text-gray-700 font-semibold text-center mt-4">
-          Already have an account?{" "}
-          <a href="/login" className="text-black hover:underline">
-            Sign in
-          </a>
-        </p>
+        <div className="flex justify-center mt-5 flex-col items-center gap-1">
+          <Link
+            to="/login"
+            className="text-sm text-gray font-semibold hover:text-white hover:underline ease-in-out duration-100"
+          >
+            Sudah Punya akun?
+          </Link>
+          <p>atau</p>
+          <Link
+            to="/"
+            className="text-sm text-gray font-semibold hover:text-white hover:underline ease-in-out duration-100"
+          >
+            Kembali ke Beranda
+          </Link>
+        </div>
       </div>
     </div>
   );

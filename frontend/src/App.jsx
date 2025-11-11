@@ -40,7 +40,8 @@ function AppContent() {
   const isCustomerPath = location.pathname.startsWith("/customer");
   const isAdminPath = location.pathname.startsWith("/admin");
   const isSellerPath = location.pathname.startsWith("/seller");
-
+  const isLoginPage = location.pathname === "/login";
+  const isRegisterPage = location.pathname === "/register";
   const hideHeaderPaths = [
     "/login",
     "/register",
@@ -57,7 +58,7 @@ function AppContent() {
 
   const hideFooterPaths = ["/login", "/register"];
 
-  const isDashboardPath = isCustomerPath || isAdminPath || isSellerPath;
+  const isDashboardPath = isCustomerPath || isAdminPath || isSellerPath || isLoginPage || isRegisterPage;
 
   return (
     <div className="flex flex-col min-h-screen bg-[#f9f6f1] text-[#1c1c1c] scroll-smooth">
@@ -67,7 +68,7 @@ function AppContent() {
       {/* Content */}
       <div
         className={`flex-1 w-full overflow-hidden ${
-          !isDashboardPath && !isHomepage ? "pt-20" : ""
+          !isDashboardPath && !isHomepage && !isLoginPage && !isRegisterPage  ? "pt-20" : ""
         }`}
       >
         {isCustomerPath ? (

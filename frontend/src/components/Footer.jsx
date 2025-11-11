@@ -29,16 +29,15 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold mb-3">Follow</h3>
             <ul className="space-y-2 text-sm text-gray-400">
-              <li><a href="#" className="hover:underline">Facebook</a></li>
-              <li><a href="#" className="hover:underline">Instagram</a></li>
+              <li><a target='_blank' href="https://www.instagram.com/rumah.keongbatam/?utm_source=ig_web_button_share_sheet" className="hover:underline">Instagram</a></li>
             </ul>
           </div>
 
           {/* Contact */}
           <div>
-            <h3 className="text-lg font-semibold mb-3">Contact</h3>
-            <p className="text-sm text-gray-400">Jl. Rumah Keong No. 7</p>
-            <p className="text-sm text-gray-400">Jakarta, Indonesia</p>
+            <h3 className="text-lg font-semibold mb-3">Kontak</h3>
+            <p className="text-sm text-gray-400">Jl. Sungai Pancur, Blok J No. 2</p>
+            <p className="text-sm text-gray-400">Kec. Sungai Beduk, Kel. Tanjung Piayu, Batam, Kepulauan Riau, Indonesia</p>
             <a
               href="mailto:kontak@rumahkeong.id"
               className="text-sm text-gray-400 hover:underline"
