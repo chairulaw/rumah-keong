@@ -48,6 +48,7 @@ const ProductDetail = () => {
     return <div className="p-10 text-center">Loading product...</div>;
   }
 
+
   return (
     <div className="bg-white min-h-screen">
       <div className="max-w-7xl mx-auto px-6 py-20">
@@ -157,10 +158,10 @@ const ProductDetail = () => {
 
         {/* Related Produk */}
         <div className="mt-28">
-          <h2 className="text-2xl font-semibold mb-6">You may also like</h2>
+          <h2 className="text-2xl font-semibold mb-6">Kamu mungkin juga menyukai</h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="border rounded-lg p-4 hover:shadow-lg">
+              <div key={i} className="border cursor-pointer rounded-lg p-4 hover:shadow-lg">
                 <img
                   src={`http://localhost:3000/uploads/${product.gambar_produk[0]}`}
                   alt={`related-${i}`}

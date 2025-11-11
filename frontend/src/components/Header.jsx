@@ -25,6 +25,8 @@ const Header = () => {
     }
   }, []);
 
+  
+
 //   useEffect(() => {
 //   const storedUser = localStorage.getItem("user");
 
