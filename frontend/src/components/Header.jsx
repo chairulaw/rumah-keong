@@ -25,6 +25,31 @@ const Header = () => {
     }
   }, []);
 
+//   useEffect(() => {
+//   const storedUser = localStorage.getItem("user");
+
+//   if (storedUser && storedUser !== "undefined") {
+//     const parsed = JSON.parse(storedUser);
+
+//     fetch("http://localhost:5000/api/auth/verify", {
+//       headers: {
+//         Authorization: `Bearer ${parsed.token}`,
+//       },
+//     })
+//       .then((res) => {
+//         if (!res.ok) throw new Error("Invalid token");
+//         return res.json();
+//       })
+//       .then(() => setUser(parsed))
+//       .catch(() => {
+//         // Token invalid atau backend mati
+//         localStorage.removeItem("user");
+//         setUser(null);
+//       });
+//   }
+// }, []);
+
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
